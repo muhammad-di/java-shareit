@@ -43,32 +43,30 @@ public class UserServiceTest {
     }
 
     @AfterEach
-    public void clean()  {
-        try{
+    public void clean() {
+        try {
             userService.delete(user1.getId());
             userService.delete(user2.getId());
             userService.delete(user3.getId());
         } catch (UserNotFoundException e) {
-            log.info("------------already deleted {}",user1.getId());
+            log.info("------------already deleted {}", user1.getId());
         }
-        try{
+        try {
             userService.delete(user2.getId());
         } catch (UserNotFoundException e) {
-            log.info("------------already deleted {}",user2.getId());
+            log.info("------------already deleted {}", user2.getId());
         }
-        try{
+        try {
             userService.delete(user3.getId());
         } catch (UserNotFoundException e) {
-            log.info("------------already deleted {}",user3.getId());
+            log.info("------------already deleted {}", user3.getId());
         }
 
     }
 
     @Test
     public void testDeleteByIdWhichDoesNotExist() {
-        Exception exception = assertThrows(UserNotFoundException.class, () -> {
-            userService.delete(420);
-        });
+        Exception exception = assertThrows(UserNotFoundException.class, () -> userService.delete(420));
 
         String expectedMessage = "a user with id { 420 } does not exist";
         String actualMessage = exception.getMessage();
@@ -78,12 +76,10 @@ public class UserServiceTest {
 
     @Test
     public void testDeleteById1() throws UserNotFoundException {
-        log.info("------------{}",userService.findById(user1.getId()));
+        log.info("------------{}", userService.findById(user1.getId()));
         userService.delete(user1.getId());
 
-        Exception exception = assertThrows(UserNotFoundException.class, () -> {
-            userService.findById(user1.getId());
-        });
+        Exception exception = assertThrows(UserNotFoundException.class, () -> userService.findById(user1.getId()));
 
         String expectedMessage = String.format("a user with id { %d } does not exist", user1.getId());
         String actualMessage = exception.getMessage();
