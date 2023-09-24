@@ -1,8 +1,7 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.user.model;
 
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,20 +12,17 @@ import java.util.Objects;
  */
 @Data
 @Builder
-public class Item {
+public class User {
     private final String name;
-    private final String description;
-    private final ItemRequest request;
+    private final String email;
     private long id;
-    private Boolean available;
-    private long owner;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Item item = (Item) o;
-        return id == item.id;
+        User user = (User) o;
+        return id == user.id;
     }
 
     @Override
@@ -37,8 +33,7 @@ public class Item {
     public Map<String, Object> toMap() {
         Map<String, Object> value = new HashMap<>();
         value.put("name", name);
-        value.put("description", description);
-        value.put("available", available);
+        value.put("email", email);
         return value;
     }
 }
