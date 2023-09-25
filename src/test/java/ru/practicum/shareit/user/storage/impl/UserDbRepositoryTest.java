@@ -128,7 +128,7 @@ public class UserDbRepositoryTest {
 
         Optional<User> userOptional = Optional.of(userDbRepository.create(user));
         assertThat(userOptional).isPresent().hasValue(expected);
-        userDbRepository.delete(4);
+        userDbRepository.delete(userOptional.get().getId());
     }
 
     //Delete------------------------------------------------------------------------------------------------------------
