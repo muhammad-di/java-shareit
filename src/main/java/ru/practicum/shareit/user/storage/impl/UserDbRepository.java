@@ -1,7 +1,7 @@
 package ru.practicum.shareit.user.storage.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -21,16 +21,10 @@ import java.util.Collection;
 @Slf4j
 @Primary
 @Repository
+@RequiredArgsConstructor
 public class UserDbRepository implements UserRepository {
     private static final int MIN_ROW_NUMBER_EFFECTED_BY_QUERY = 1;
-
-
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public UserDbRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public User create(User user) {

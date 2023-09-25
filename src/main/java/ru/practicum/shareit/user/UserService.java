@@ -1,6 +1,6 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
@@ -12,13 +12,9 @@ import ru.practicum.shareit.user.storage.UserRepository;
 import java.util.Collection;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
-
-    @Autowired
-    public UserService(UserRepository repository) {
-        this.repository = repository;
-    }
 
     public UserDto create(UserDto userDto) throws UserWithEmailAlreadyExists {
         if (repository.contains(userDto.getEmail())) {
@@ -30,8 +26,9 @@ public class UserService {
         return UserMapper.toUserDto(userRes);
     }
 
-    public UserDto update(UserDto userDto) throws UserNotFoundException, UserWithEmailAlreadyExists {
-        if (!repository.contains(userDto.getId())) {
+    public UserDto update(long userId, UserDto userDto) throws UserNotFoundException, UserWithEmailAlreadyExists {
+        userDto.setId(userId);
+        if (!repository.contains(userId)) {
             String message = String.format("a user with id { %d } does not exist", userDto.getId());
             throw new UserNotFoundException(message);
         }

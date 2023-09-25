@@ -1,6 +1,6 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -11,18 +11,12 @@ import ru.practicum.shareit.user.model.User;
 import javax.validation.Valid;
 import java.util.Collection;
 
-/**
- * TODO Sprint add-controllers.
- */
+
 @RestController
 @RequestMapping(path = "/users")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService service;
-
-    @Autowired
-    public UserController(UserService service) {
-        this.service = service;
-    }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -35,8 +29,7 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.OK)
     public UserDto update(@PathVariable long userId, @RequestBody UserDto userDto)
             throws UserNotFoundException, UserWithEmailAlreadyExists {
-        userDto.setId(userId);
-        return service.update(userDto);
+        return service.update(userId, userDto);
     }
 
     @GetMapping("/{userId}")

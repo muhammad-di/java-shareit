@@ -1,7 +1,7 @@
 package ru.practicum.shareit.item.storage.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,14 +20,9 @@ import java.util.Collection;
 @Slf4j
 @Primary
 @Repository
+@RequiredArgsConstructor
 public class ItemDbRepository implements ItemRepository {
-
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public ItemDbRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public Item create(Item item) {
