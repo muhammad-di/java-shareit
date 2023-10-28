@@ -30,7 +30,7 @@ public class Booking {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booker_id")
-    @ToString.Exclude
+//    @ToString.Exclude
     private User booker;
 
     @ManyToOne(fetch = FetchType.LAZY)

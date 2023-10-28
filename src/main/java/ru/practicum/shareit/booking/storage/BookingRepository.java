@@ -23,13 +23,16 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findAllByBooker_IdAndEndLessThanEqualOrderByStartDesc(long bookerId, LocalDateTime current);
 
-    @Query(value = "select b.* from bookings b " +
-            "join items i on b.item_id  = i.id " +
-            "where i.owner_id = :ownerId " +
-            "and i.id = :itemId " +
-            "and b.start_date < :currentTime " +
-            "order by b.start_date", nativeQuery = true)
-    List<Booking> findLastAndNextByIdAndOwnerId(long itemId, long ownerId, LocalDateTime currentTime);
+    List<Booking> findAllByItem_IdAndItemOwnerIdAndStatusAndStartLessThanOrderById(long itemId,
+                                                                                   long ownerId,
+                                                                                   Status status,
+                                                                                   LocalDateTime currentDateTime);
+
+    List<Booking> findAllByItem_IdAndBookerIdAndStatusAndStartLessThanEqualAndEndGreaterThanOrderById(long itemId,
+                                                                                                      long ownerId,
+                                                                                                      Status status,
+                                                                                                      LocalDateTime currentDateTimeStart,
+                                                                                                      LocalDateTime currentDateTimeForEnd);
 
     Booking findByIdAndBookerId(long bookingId, long bookerOrOwnerId);
 
@@ -47,7 +50,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "where b.id  = :bookingId " +
             "and i.owner_id = :ownerId " +
             "order by b.id desc", nativeQuery = true)
-    Optional<Booking> findBookingOptionalByIdAndOwnerId(@Param("bookingId") long bookingId, @Param("ownerId") long ownerId);
+    Optional<Booking> findBookingOptionalByIdAndOwnerId(@Param("bookingId") long bookingId,
+                                                        @Param("ownerId") long ownerId);
 
 
     @Query(value = "select * from bookings b " +
@@ -76,5 +80,4 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                                                                                                LocalDateTime currentEnd);
 
     List<Booking> findAllByItem_OwnerIdAndEndLessThanEqualOrderByStartDesc(long ownerId, LocalDateTime current);
-
 }

@@ -38,9 +38,9 @@ public class ItemController {
 
 
     @GetMapping("/{itemId}")
-    public ItemDto findById(@PathVariable @Min(1) long itemId, @RequestHeader("X-Sharer-User-Id") @Min(1) long ownerId
+    public ItemDto findById(@PathVariable @Min(1) long itemId, @RequestHeader("X-Sharer-User-Id") @Min(1) long ownerOrBookerId
     ) throws ItemNotFoundException {
-        return service.findById(itemId, ownerId);
+        return service.findById(itemId, ownerOrBookerId);
     }
 
     @PatchMapping("/{itemId}")
@@ -57,7 +57,7 @@ public class ItemController {
     @GetMapping
     public Collection<ItemDto> findAllByOwnerId(@RequestHeader("X-Sharer-User-Id") @Min(1) long userId)
             throws UserNotFoundException {
-        return service.findAllByOwnerId(userId);
+        return service.findAllByUserId(userId);
     }
 
     @GetMapping("/search")

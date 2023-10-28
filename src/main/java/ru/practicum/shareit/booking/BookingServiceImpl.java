@@ -91,8 +91,7 @@ public class BookingServiceImpl implements BookingService {
         if (state.equals(State.ALL)) {
             return bookingRepository.findAllByBookerIdOrderByIdDesc(bookerId);
         } else if (state.equals(State.FUTURE)) {
-            LocalDateTime current = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
-            return bookingRepository.findAllByBooker_IdAndStartAfterOrderByIdDesc(bookerId, current);
+            return bookingRepository.findAllByBooker_IdAndStartAfterOrderByIdDesc(bookerId, currentTime);
         } else if (state.equals(State.WAITING) || state.equals(State.REJECTED)) {
             Status status = Status.valueOf(stateString);
             return bookingRepository.findAllByBookerIdAndStatusOrderByIdDesc(bookerId, status);

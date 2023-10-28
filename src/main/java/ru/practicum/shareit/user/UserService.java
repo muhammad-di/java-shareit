@@ -8,18 +8,13 @@ import java.util.List;
 
 interface UserService {
 
-    @Transactional(readOnly = true)
     List<User> findAll();
 
-    @Transactional(readOnly = true)
     User findById(long id) throws UserNotFoundException;
 
-    @Transactional
     User save(User user);
 
-    @Transactional
     User update(User user) throws UserNotFoundException;
 
-    @Transactional
     void deleteById(long id) throws UserNotFoundException;
 }

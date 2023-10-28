@@ -29,5 +29,11 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     List<Item> findAllByOwnerIdOrderById(long id);
 
+    @Query(value = "select * from items i " +
+            "join bookings b on b.item_id  = i.id " +
+            "where b.booker_id  = :id " +
+            "order by b.id desc", nativeQuery = true)
+    List<Item> findAllByBookerIdOrderById(long id);
+
     List<Item> findAllByDescriptionContainsIgnoreCaseAndAvailableTrue(String text);
 }
