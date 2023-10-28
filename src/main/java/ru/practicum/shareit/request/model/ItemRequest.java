@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -12,10 +13,21 @@ import java.util.Objects;
  */
 @Data
 @Builder
+@Entity
+@Table(name = "item_request")
 public class ItemRequest {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = "description")
     private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User requester;
+
+    @Column(name = "created")
     private LocalDateTime created;
 
     @Override

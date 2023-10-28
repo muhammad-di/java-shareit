@@ -1,84 +1,34 @@
 package ru.practicum.shareit.item;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.exception.BookingInFutureException;
+import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.exception.IncorrectBookerException;
 import ru.practicum.shareit.item.exception.IncorrectOwnerException;
-import ru.practicum.shareit.item.exception.InvalidRequestHeaderException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
-import ru.practicum.shareit.item.exception.PathNotFoundException;
-import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
-import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.Collection;
-import java.util.Collections;
 
-@Service
-@RequiredArgsConstructor
-public class ItemService {
 
-    private static final int MIN_ID = 1;
-    private final ItemRepository repository;
-    private final UserRepository userRepository;
+public interface ItemService {
+    @Transactional(readOnly = true)
+    Collection<ItemDto> findAllByOwnerId(long userId) throws UserNotFoundException;
 
-    public ItemDto create(ItemDto itemDto, long userId) throws UserNotFoundException, InvalidRequestHeaderException {
-        validateRequestHeader(userId);
-        containsOwnerId(userId);
-        Item item = ItemMapper.toItem(itemDto, userId);
-        item = repository.create(item);
-        return ItemMapper.toItemDto(item);
-    }
+    @Transactional(readOnly = true)
+    Collection<Item> searchByName(String name);
 
-    public ItemDto findById(long id) throws ItemNotFoundException, PathNotFoundException {
-        if (id < MIN_ID) {
-            String message = String.format("Path \"/%d\" does not exist", id);
-            throw new PathNotFoundException(message);
-        }
-        Item item = repository.findById(id);
-        if (item == null) {
-            String message = String.format("an item with id { %d } does not exist", id);
-            throw new ItemNotFoundException(message);
-        }
-        return ItemMapper.toItemDto(item);
-    }
+    @Transactional(readOnly = true)
+    ItemDto findById(long itemId, long ownerId) throws ItemNotFoundException;
 
-    public ItemDto update(ItemDto itemDto, long userId, long itemId)
-            throws UserNotFoundException, IncorrectOwnerException, InvalidRequestHeaderException {
-        validateRequestHeader(userId);
-        containsOwnerId(userId);
-        itemDto.setId(itemId);
-        Item item = ItemMapper.toItem(itemDto, userId);
-        item = repository.update(item);
-        return ItemMapper.toItemDto(item);
-    }
+    @Transactional
+    Item save(Item user, long userId) throws UserNotFoundException;
 
-    public Collection<Item> findAll(long userId) throws UserNotFoundException, InvalidRequestHeaderException {
-        validateRequestHeader(userId);
-        containsOwnerId(userId);
-        return repository.findAll(userId);
-    }
+    @Transactional
+    Item update(Item item, long userId) throws UserNotFoundException, ItemNotFoundException, IncorrectOwnerException;
 
-    public Collection<Item> searchByName(String text) {
-        if (!StringUtils.hasText(text)) {
-            return Collections.emptyList();
-        }
-        return repository.searchByName(text);
-    }
-
-    private void containsOwnerId(long userId) throws UserNotFoundException {
-        if (!userRepository.contains(userId)) {
-            String message = String.format("a user with id { %d } does not exist", userId);
-            throw new UserNotFoundException(message);
-        }
-    }
-
-    private void validateRequestHeader(long userId) throws InvalidRequestHeaderException {
-        if (userId < MIN_ID) {
-            throw new InvalidRequestHeaderException("Invalid X-Sharer-User-Id header");
-        }
-    }
+    @Transactional
+    Comment createComment(Comment comment) throws ItemNotFoundException, IncorrectBookerException, BookingInFutureException;
 }

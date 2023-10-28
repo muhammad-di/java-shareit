@@ -1,20 +1,33 @@
 package ru.practicum.shareit.item.storage;
 
-import ru.practicum.shareit.item.exception.IncorrectOwnerException;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.Collection;
+import java.util.List;
 
-public interface ItemRepository {
-    Item create(Item item);
+public interface ItemRepository extends JpaRepository<Item, Long> {
+    @Modifying
+    @Query("update Item i " +
+            "set i.available = :available " +
+            "where i.id = :id")
+    void updateAvailable(@Param("available") boolean available, @Param("id") long id);
 
-    boolean contains(long id);
+    @Modifying
+    @Query("update Item i " +
+            "set i.description = :description " +
+            "where i.id = :id")
+    void updateDescription(@Param("description") String description, @Param("id") long id);
 
-    Item findById(long id);
+    @Modifying
+    @Query("update Item i " +
+            "set i.name = :name " +
+            "where i.id = :id")
+    void updateName(@Param("name") String name, @Param("id") long id);
 
-    Item update(Item item) throws IncorrectOwnerException;
+    List<Item> findAllByOwnerIdOrderById(long id);
 
-    Collection<Item> findAll(long userId);
-
-    Collection<Item> searchByName(String text);
+    List<Item> findAllByDescriptionContainsIgnoreCaseAndAvailableTrue(String text);
 }

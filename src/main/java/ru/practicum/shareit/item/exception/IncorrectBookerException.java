@@ -1,27 +1,23 @@
-package ru.practicum.shareit.user.exception;
+package ru.practicum.shareit.item.exception;
 
 
 import org.springframework.http.HttpStatus;
 
-public class UserNotFoundException extends Exception {
+public class IncorrectBookerException extends Exception {
     private HttpStatus errorCode;
 
-    public UserNotFoundException(String message) {
+    public IncorrectBookerException(String message) {
         super(message);
     }
 
-    public UserNotFoundException(String message, HttpStatus errorCode) {
+    public IncorrectBookerException(String message, HttpStatus errorCode) {
         super(message);
         this.errorCode = errorCode;
     }
 
-    public UserNotFoundException(String message, Throwable cause, HttpStatus errorCode) {
+    public IncorrectBookerException(String message, Throwable cause, HttpStatus errorCode) {
         super(message, cause);
         this.errorCode = errorCode;
-    }
-
-    public UserNotFoundException() {
-
     }
 
     public HttpStatus getErrorCode() {
