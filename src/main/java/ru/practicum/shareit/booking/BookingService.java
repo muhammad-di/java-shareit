@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking;
 
-import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.exception.*;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;

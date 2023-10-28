@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
 
