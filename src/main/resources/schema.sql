@@ -56,6 +56,6 @@ CREATE TABLE IF NOT EXISTS comments
   item_id    BIGINT,
   text       VARCHAR,
   created    TIMESTAMP,
-  CONSTRAINT fk_bookings_to_users FOREIGN KEY(author_id) REFERENCES users(id),
-  CONSTRAINT fk_bookings_to_items FOREIGN KEY(item_id) REFERENCES items(id)
+  CONSTRAINT fk_comments_to_users FOREIGN KEY(author_id) REFERENCES users(id),
+  CONSTRAINT fk_comments_to_items FOREIGN KEY(item_id) REFERENCES items(id)
 );
