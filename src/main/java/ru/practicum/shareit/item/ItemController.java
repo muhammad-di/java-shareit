@@ -1,50 +1,81 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.booking.exception.BookingInFutureException;
+import ru.practicum.shareit.comment.dto.CommentDto;
+import ru.practicum.shareit.comment.mapper.CommentMapper;
+import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.exception.*;
+import ru.practicum.shareit.item.exception.IncorrectBookerException;
+import ru.practicum.shareit.item.exception.IncorrectOwnerException;
+import ru.practicum.shareit.item.exception.ItemNotFoundException;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
+@Validated
 public class ItemController {
-    private static final int MIN_ID = 1;
     private final ItemService service;
 
     @PostMapping
-    public ItemDto create(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemDto create(@RequestHeader("X-Sharer-User-Id") @Min(1) long userId,
                           @Valid @RequestBody ItemDto itemDto)
-            throws InvalidRequestHeaderException, UserNotFoundException {
-        return service.create(itemDto, userId);
+            throws UserNotFoundException {
+        Item item = ItemMapper.toItem(itemDto);
+        item = service.save(item, userId);
+        return ItemMapper.toItemDto(item);
     }
 
+
     @GetMapping("/{itemId}")
-    public ItemDto findById(@PathVariable long itemId) throws PathNotFoundException, ItemNotFoundException {
-        return service.findById(itemId);
+    public ItemDto findById(@PathVariable @Min(1) long itemId, @RequestHeader("X-Sharer-User-Id") @Min(1) long ownerOrBookerId
+    ) throws ItemNotFoundException {
+        return service.findById(itemId, ownerOrBookerId);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto update(@PathVariable long itemId,
-                          @RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemDto update(@PathVariable @Min(1) long itemId,
+                          @RequestHeader("X-Sharer-User-Id") @Min(1) long userId,
                           @RequestBody ItemDto itemDto)
-            throws InvalidRequestHeaderException, UserNotFoundException, IncorrectOwnerException {
-        return service.update(itemDto, userId, itemId);
+            throws UserNotFoundException, IncorrectOwnerException, ItemNotFoundException {
+        Item item = ItemMapper.toItem(itemDto);
+        item.setId(itemId);
+        item = service.update(item, userId);
+        return ItemMapper.toItemDto(item);
     }
 
     @GetMapping
-    public Collection<Item> findAll(@RequestHeader("X-Sharer-User-Id") long userId)
-            throws InvalidRequestHeaderException, UserNotFoundException {
-        return service.findAll(userId);
+    public Collection<ItemDto> findAllByOwnerId(@RequestHeader("X-Sharer-User-Id") @Min(1) long userId)
+            throws UserNotFoundException {
+        return service.findAllByUserId(userId);
     }
 
     @GetMapping("/search")
-    public Collection<Item> searchByName(@RequestParam String text) {
-        return service.searchByName(text);
+    public Collection<ItemDto> searchByName(@RequestParam String text) {
+        return service.searchByName(text).stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto createComment(@PathVariable @Min(1) long itemId,
+                                    @RequestHeader("X-Sharer-User-Id") @Min(1) long bookerId,
+                                    @Valid @RequestBody CommentDto commentDto)
+            throws ItemNotFoundException, IncorrectBookerException, BookingInFutureException {
+        Comment comment = CommentMapper.toComment(commentDto);
+        comment.setItem(itemId);
+        comment.setAuthor(bookerId);
+        Comment commentResponse = service.createComment(comment);
+        return CommentMapper.toCommentDto(commentResponse);
     }
 }

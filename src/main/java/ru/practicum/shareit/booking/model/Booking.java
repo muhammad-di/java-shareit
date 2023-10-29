@@ -1,10 +1,10 @@
 package ru.practicum.shareit.booking.model;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -13,12 +13,32 @@ import java.util.Objects;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "bookings")
 public class Booking {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = "start_date")
     private LocalDateTime start;
+
+    @Column(name = "end_date")
     private LocalDateTime end;
-    private final Item item;
-    private final User booker;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booker_id")
+//    @ToString.Exclude
+    private User booker;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    private Item item;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
 
     @Override
