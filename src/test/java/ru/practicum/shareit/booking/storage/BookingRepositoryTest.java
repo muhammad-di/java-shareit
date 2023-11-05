@@ -76,7 +76,7 @@ public class BookingRepositoryTest {
     private Pageable sortedByStartDesc;
 
 
-    public void createItems(LocalDateTime current) {
+    public void create(LocalDateTime current) {
         sortedByStartDesc = PageRequest.of(0, 10, Sort.by("start").descending());
 
         user1 = User.builder().name("John").email("john.doe@mail.com").build();
@@ -116,7 +116,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testSaveBooking1() {
-        createItems(LocalDateTime.now());
+        create(LocalDateTime.now());
 
         User createdOwner1 = userRepository.save(user1);
         User createdBooker2 = userRepository.save(user2);
@@ -160,7 +160,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testFindByIdBooking1() {
-        createItems(LocalDateTime.now());
+        create(LocalDateTime.now());
 
         User createdOwner1 = userRepository.save(user1);
         User createdBooker2 = userRepository.save(user2);
@@ -205,7 +205,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testExistsByIdBooking1True() {
-        createItems(LocalDateTime.now());
+        create(LocalDateTime.now());
 
         User createdOwner1 = userRepository.save(user1);
         User createdBooker2 = userRepository.save(user2);
@@ -241,7 +241,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testExistsByIdBooking1False() {
-        createItems(LocalDateTime.now());
+        create(LocalDateTime.now());
 
         User createdOwner1 = userRepository.save(user1);
         User createdBooker2 = userRepository.save(user2);
@@ -282,7 +282,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testFindAllByBookerIdOrderByStartDesc_WhereUser4BooksItem1() {
-        createItems(LocalDateTime.now());
+        create(LocalDateTime.now());
 
         User createdOwner1 = userRepository.save(user1);
         User createdOwner2 = userRepository.save(user2);
@@ -401,7 +401,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testFindAllByBookerIdOrderByStartDesc_WhereUser5BooksItem1() {
-        createItems(LocalDateTime.now());
+        create(LocalDateTime.now());
 
         User createdOwner1 = userRepository.save(user1);
         User createdOwner2 = userRepository.save(user2);
@@ -520,7 +520,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testFindAllByBookerIdOrderByStartDesc_WhereUser6BooksItem1() {
-        createItems(LocalDateTime.now());
+        create(LocalDateTime.now());
 
         User createdOwner1 = userRepository.save(user1);
         User createdOwner2 = userRepository.save(user2);
@@ -639,7 +639,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testFindAllByBookerIdOrderByStartDesc_WhereUser4BooksItem1Item2Item3AllStateWaiting() {
-        createItems(LocalDateTime.now());
+        create(LocalDateTime.now());
 
         User createdOwner1 = userRepository.save(user1);
         User createdOwner2 = userRepository.save(user2);
@@ -727,7 +727,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testFindAllByBookerIdOrderByStartDesc_WhereUser4BooksItem1Item2Item3AllStateRejected() {
-        createItems(LocalDateTime.now());
+        create(LocalDateTime.now());
 
         User createdOwner1 = userRepository.save(user1);
         User createdOwner2 = userRepository.save(user2);
@@ -815,7 +815,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testFindAllByBookerIdOrderByStartDesc_WhereUser4BooksItem1Item2Item3AllStateApproved() {
-        createItems(LocalDateTime.now());
+        create(LocalDateTime.now());
 
         User createdOwner1 = userRepository.save(user1);
         User createdOwner2 = userRepository.save(user2);
@@ -903,7 +903,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testFindAllByBookerIdOrderByStartDesc_WhereUser4BooksItem1Item2Item3DifferentStates() {
-        createItems(LocalDateTime.now());
+        create(LocalDateTime.now());
 
         User createdOwner1 = userRepository.save(user1);
         User createdOwner2 = userRepository.save(user2);
@@ -991,7 +991,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testFindAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc_WhereUser4BooksItem1Item2Item3AllStateWaiting() {
-        createItems(LocalDateTime.now().minusDays(3));
+        create(LocalDateTime.now().minusDays(3));
 
         User createdOwner1 = userRepository.save(user1);
         User createdOwner2 = userRepository.save(user2);
@@ -1079,7 +1079,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testFindAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc_WhereUser4BooksItem1Item2Item3AllStateRejected() {
-        createItems(LocalDateTime.now().minusDays(3));
+        create(LocalDateTime.now().minusDays(3));
 
         User createdOwner1 = userRepository.save(user1);
         User createdOwner2 = userRepository.save(user2);
@@ -1168,7 +1168,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testFindAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc_WhereUser4BooksItem1Item2Item3AllStateApproved() {
-        createItems(LocalDateTime.now().minusDays(3));
+        create(LocalDateTime.now().minusDays(3));
 
         User createdOwner1 = userRepository.save(user1);
         User createdOwner2 = userRepository.save(user2);
@@ -1257,7 +1257,7 @@ public class BookingRepositoryTest {
 
     @Test
     public void testFindAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc_WhereUser4BooksItem1Item2Item3DifferentStates() {
-        createItems(LocalDateTime.now().minusDays(3));
+        create(LocalDateTime.now().minusDays(3));
 
         User createdOwner1 = userRepository.save(user1);
         User createdOwner2 = userRepository.save(user2);
