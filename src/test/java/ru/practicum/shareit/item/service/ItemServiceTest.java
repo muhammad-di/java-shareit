@@ -71,11 +71,9 @@ public class ItemServiceTest {
     public void testSave() throws UserNotFoundException, ItemRequestNotFoundException {
         ItemService service = new ItemServiceImpl(itemRepository, userRepository, bookingRepository, commentRepository, itemRequestRepository);
 
-        Mockito.
-                when(itemRepository.save(Mockito.any(Item.class)))
+        Mockito.when(itemRepository.save(Mockito.any(Item.class)))
                 .thenReturn(item1);
-        Mockito.
-                when(userRepository.findById(Mockito.anyLong()))
+        Mockito.when(userRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(user1));
 
 
@@ -91,8 +89,7 @@ public class ItemServiceTest {
     public void testSaveShouldThrowUserNotFoundException() {
         ItemService service = new ItemServiceImpl(itemRepository, userRepository, bookingRepository, commentRepository, itemRequestRepository);
 
-        Mockito.
-                when(userRepository.findById(Mockito.anyLong()))
+        Mockito.when(userRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.ofNullable(null));
 
 
@@ -109,14 +106,11 @@ public class ItemServiceTest {
     public void testUpdate() throws IncorrectOwnerException, ItemNotFoundException, UserNotFoundException, ItemRequestNotFoundException {
         ItemService service = new ItemServiceImpl(itemRepository, userRepository, bookingRepository, commentRepository, itemRequestRepository);
 
-        Mockito.
-                when(itemRepository.findById(Mockito.anyLong()))
+        Mockito.when(itemRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(item1));
-        Mockito.
-                when(userRepository.findById(Mockito.anyLong()))
+        Mockito.when(userRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(user1));
-        Mockito.
-                when(itemRepository.save(Mockito.any(Item.class)))
+        Mockito.when(itemRepository.save(Mockito.any(Item.class)))
                 .thenReturn(item1);
 
         service.save(item1, user1.getId());
@@ -133,14 +127,11 @@ public class ItemServiceTest {
             throws UserNotFoundException, ItemRequestNotFoundException {
         ItemService service = new ItemServiceImpl(itemRepository, userRepository, bookingRepository, commentRepository, itemRequestRepository);
 
-        Mockito.
-                when(itemRepository.findById(Mockito.anyLong()))
+        Mockito.when(itemRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(item1));
-        Mockito.
-                when(userRepository.findById(Mockito.anyLong()))
+        Mockito.when(userRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(user1));
-        Mockito.
-                when(itemRepository.save(Mockito.any(Item.class)))
+        Mockito.when(itemRepository.save(Mockito.any(Item.class)))
                 .thenReturn(item1);
 
         service.save(item1, user1.getId());
@@ -160,11 +151,9 @@ public class ItemServiceTest {
             throws UserNotFoundException, ItemRequestNotFoundException {
         ItemService service = new ItemServiceImpl(itemRepository, userRepository, bookingRepository, commentRepository, itemRequestRepository);
 
-        Mockito.
-                when(itemRepository.findById(Mockito.anyLong()))
+        Mockito.when(itemRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.ofNullable(null));
-        Mockito.
-                when(userRepository.findById(Mockito.anyLong()))
+        Mockito.when(userRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(user1));
 
         service.save(item1, user1.getId());

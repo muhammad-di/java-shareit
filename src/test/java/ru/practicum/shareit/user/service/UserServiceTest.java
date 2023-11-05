@@ -38,8 +38,7 @@ public class UserServiceTest {
     public void testFindById() throws UserNotFoundException {
         UserService service = new UserServiceImpl(repository);
 
-        Mockito.
-                when(repository.findById(1L))
+        Mockito.when(repository.findById(1L))
                 .thenReturn(Optional.of(user1));
 
         User actual = service.findById(1);
@@ -53,8 +52,7 @@ public class UserServiceTest {
     public void testFindByIdShouldThrowUserNotFoundException() {
         UserService service = new UserServiceImpl(repository);
 
-        Mockito.
-                when(repository.findById(Mockito.anyLong()))
+        Mockito.when(repository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.ofNullable(null));
 
         final UserNotFoundException exception = Assertions.assertThrows(
@@ -71,8 +69,7 @@ public class UserServiceTest {
     public void testSave() {
         UserService service = new UserServiceImpl(repository);
 
-        Mockito.
-                when(repository.save(Mockito.any(User.class)))
+        Mockito.when(repository.save(Mockito.any(User.class)))
                 .thenReturn(user1);
 
         User actual = service.save(user1);
@@ -86,8 +83,7 @@ public class UserServiceTest {
     public void testSaveWhenArgumentNullShouldThrowIllegalArgumentException() throws IllegalArgumentException {
         UserService service = new UserServiceImpl(repository);
 
-        Mockito.
-                when(repository.save(null))
+        Mockito.when(repository.save(null))
                 .thenThrow(new IllegalArgumentException("Illegal argument"));
 
 
@@ -105,11 +101,9 @@ public class UserServiceTest {
         UserDto userDto = UserDto.builder().id(1).name("newName").email("name@newEmail.ru").build();
         User updatedUser = User.builder().id(1).name("newName").email("name@newEmail.ru").build();
 
-        Mockito.
-                when(repository.save(updatedUser))
+        Mockito.when(repository.save(updatedUser))
                 .thenReturn(updatedUser);
-        Mockito.
-                when(repository.findById(1L))
+        Mockito.when(repository.findById(1L))
                 .thenReturn(Optional.of(user1));
 
         User actual = service.update(userDto);
@@ -125,11 +119,9 @@ public class UserServiceTest {
         UserDto userDto = UserDto.builder().id(1).name(null).email("name@newEmail.ru").build();
         User updatedUser = User.builder().id(1).name("name").email("name@newEmail.ru").build();
 
-        Mockito.
-                when(repository.save(updatedUser))
+        Mockito.when(repository.save(updatedUser))
                 .thenReturn(updatedUser);
-        Mockito.
-                when(repository.findById(1L))
+        Mockito.when(repository.findById(1L))
                 .thenReturn(Optional.of(user1));
 
         User actual = service.update(userDto);
@@ -145,11 +137,9 @@ public class UserServiceTest {
         UserDto userDto = UserDto.builder().id(1).name("newName").email(null).build();
         User updatedUser = User.builder().id(1).name("newName").email("name1@mail.ru").build();
 
-        Mockito.
-                when(repository.save(updatedUser))
+        Mockito.when(repository.save(updatedUser))
                 .thenReturn(updatedUser);
-        Mockito.
-                when(repository.findById(1L))
+        Mockito.when(repository.findById(1L))
                 .thenReturn(Optional.of(user1));
 
         User actual = service.update(userDto);
@@ -164,8 +154,7 @@ public class UserServiceTest {
         UserService service = new UserServiceImpl(repository);
         UserDto userDto = UserDto.builder().id(1).name("newName").email("name@newEmail.ru").build();
 
-        Mockito.
-                when(repository.findById(1L))
+        Mockito.when(repository.findById(1L))
                 .thenReturn(Optional.ofNullable(null));
 
         final UserNotFoundException exception = Assertions.assertThrows(
@@ -181,8 +170,7 @@ public class UserServiceTest {
     public void testDeleteById1() throws UserNotFoundException {
         UserService service = new UserServiceImpl(repository);
 
-        Mockito.
-                when(repository.existsById(Mockito.anyLong()))
+        Mockito.when(repository.existsById(Mockito.anyLong()))
                 .thenReturn(true);
 
         service.deleteById(1L);
@@ -194,8 +182,7 @@ public class UserServiceTest {
     public void testDeleteByIdShouldThrowUserNotFoundException() {
         UserService service = new UserServiceImpl(repository);
 
-        Mockito.
-                when(repository.existsById(Mockito.anyLong()))
+        Mockito.when(repository.existsById(Mockito.anyLong()))
                 .thenReturn(false);
 
         final UserNotFoundException exception = Assertions.assertThrows(
