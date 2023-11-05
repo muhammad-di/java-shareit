@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDtoForRequestBody;
@@ -22,6 +23,7 @@ public class ItemRequestController {
     private final ItemRequestService service;
 
     @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
     public ItemRequestDtoForResponseBody create(@RequestHeader("X-Sharer-User-Id") @Min(1) long requestorId,
                                                 @Valid @RequestBody ItemRequestDtoForRequestBody dto)
             throws UserNotFoundException {

@@ -11,20 +11,21 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Data
 @Builder
 public class BookingDto {
     @Min(0)
     private long id;
+
     @Min(1)
     private long itemId;
-    private @NotNull(message = "Start is mandatory")
-    LocalDateTime start;
-    private @NotNull(message = "End is mandatory")
-    LocalDateTime end;
+
+    @NotNull(message = "Start is mandatory")
+    private LocalDateTime start;
+
+    @NotNull(message = "End is mandatory")
+    private LocalDateTime end;
+
     private Status status;
     private UserDto booker;
     private ItemDto item;

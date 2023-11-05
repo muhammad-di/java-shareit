@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -24,6 +25,7 @@ public class BookingController {
     private final BookingService service;
 
     @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
     public BookingDto create(@RequestHeader("X-Sharer-User-Id") @Min(1) long bookerId,
                              @Valid @RequestBody BookingDto bookingDto)
             throws
@@ -49,10 +51,10 @@ public class BookingController {
     }
 
     @GetMapping("/{bookingId}")
-    public BookingDto findById(@RequestHeader("X-Sharer-User-Id") @Min(1) long bookerOrOwnerId,
+    public BookingDto findById(@RequestHeader("X-Sharer-User-Id") @Min(1) long userId,
                                @Min(1) @PathVariable long bookingId)
             throws BookingNotFoundException, UserNotAllowedAccessBookingException {
-        Booking booking = service.findById(bookingId, bookerOrOwnerId);
+        Booking booking = service.findById(bookingId, userId);
         return BookingMapping.toBookingDto(booking);
     }
 

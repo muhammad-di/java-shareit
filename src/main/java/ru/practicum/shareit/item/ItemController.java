@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.exception.BookingInFutureException;
@@ -30,6 +31,7 @@ public class ItemController {
     private final ItemService service;
 
     @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
     public ItemDto create(@RequestHeader("X-Sharer-User-Id") @Min(1) long ownerId,
                           @Valid @RequestBody ItemDto itemDto)
             throws UserNotFoundException, ItemRequestNotFoundException {
@@ -39,6 +41,7 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
+    @ResponseStatus(code = HttpStatus.CREATED)
     public ItemDto update(@PathVariable @Min(1) long itemId,
                           @RequestHeader("X-Sharer-User-Id") @Min(1) long ownerId,
                           @RequestBody ItemDto itemDto)
@@ -70,6 +73,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
+    @ResponseStatus(code = HttpStatus.CREATED)
     public CommentDto createComment(@PathVariable @Min(1) long itemId,
                                     @RequestHeader("X-Sharer-User-Id") @Min(1) long bookerId,
                                     @Valid @RequestBody CommentDto commentDto)

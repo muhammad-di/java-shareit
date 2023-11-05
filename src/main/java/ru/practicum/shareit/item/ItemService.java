@@ -15,7 +15,7 @@ import java.util.Collection;
 
 public interface ItemService {
 
-    Item save(Item user, long ownerId) throws UserNotFoundException, ItemRequestNotFoundException;
+    Item save(Item item, long ownerId) throws UserNotFoundException, ItemRequestNotFoundException;
 
     Item update(ItemDto itemDto, long ownerId) throws ItemNotFoundException, IncorrectOwnerException;
 
