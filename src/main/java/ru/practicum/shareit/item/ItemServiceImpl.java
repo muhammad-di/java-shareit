@@ -88,7 +88,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Item> searchByName(String text) {
+    public Collection<Item> searchByDescription(String text) {
         if (!StringUtils.hasText(text)) {
             return Collections.emptyList();
         }

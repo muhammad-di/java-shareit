@@ -23,7 +23,7 @@ public interface ItemService {
 
     Collection<ItemDtoForGet> findAllByOwnerId(long ownerId) throws UserNotFoundException;
 
-    Collection<Item> searchByName(String name);
+    Collection<Item> searchByDescription(String name);
 
     Comment createComment(Comment comment) throws ItemNotFoundException, IncorrectBookerException;
 }

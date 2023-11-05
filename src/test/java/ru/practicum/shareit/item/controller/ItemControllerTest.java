@@ -176,7 +176,7 @@ public class ItemControllerTest {
 
     @Test
     void searchByNameTest() throws Exception {
-        when(service.searchByName(anyString()))
+        when(service.searchByDescription(anyString()))
                 .thenReturn(List.of(item1));
 
 
