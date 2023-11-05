@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import org.springframework.data.domain.Slice;
 import ru.practicum.shareit.booking.exception.*;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
@@ -15,13 +16,18 @@ public interface BookingService {
             InvalidStartTimeException,
             InvalidEndTimeException,
             UserNotFoundException,
-            BookingNotFoundException, InvalidBookerException;
+            BookingNotFoundException,
+            InvalidBookerException;
 
-    Booking approve(long bookingId, long ownerId, boolean approved) throws BookingNotFoundException, BookingAlreadyApprovedException;
+    Booking approve(long bookingId, long ownerId, boolean approved)
+            throws BookingNotFoundException, BookingAlreadyApprovedException, InvalidOwnerException;
 
-    Booking findByBookerOrOwnerId(long bookingId, long bookerOrOwnerId) throws BookingNotFoundException, UserNotFoundException;
+    Booking findById(long bookingId, long userId)
+            throws BookingNotFoundException, UserNotAllowedAccessBookingException;
 
-    Collection<Booking> findAllByBookerId(long bookerId, String stateString) throws UserNotFoundException, UnsupportedStateException;
+    Collection<Booking> findAllByBookerId(long bookerId, String stateString, int from, int size)
+            throws UserNotFoundException, UnsupportedStateException;
 
-    Collection<Booking> findAllByOwnerId(long ownerId, String stateString) throws UserNotFoundException, UnsupportedStateException;
+    Collection<Booking> findAllByOwnerId(long ownerId, String stateString, int from, int size)
+            throws UserNotFoundException, UnsupportedStateException;
 }

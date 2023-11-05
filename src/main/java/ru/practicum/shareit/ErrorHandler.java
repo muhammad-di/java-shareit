@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.booking.exception.*;
 import ru.practicum.shareit.item.exception.*;
+import ru.practicum.shareit.request.exception.ItemRequestNotFoundException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.exception.UserWithEmailAlreadyExists;
 
@@ -157,4 +158,27 @@ public class ErrorHandler {
         e.setErrorCode(HttpStatus.BAD_REQUEST);
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleInvalidOwnerException(final InvalidOwnerException e) {
+        e.setErrorCode(HttpStatus.NOT_FOUND);
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleUserNotAllowedAccessBookingException(final UserNotAllowedAccessBookingException e) {
+        e.setErrorCode(HttpStatus.NOT_FOUND);
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleItemRequestNotFoundException(final ItemRequestNotFoundException e) {
+        e.setErrorCode(HttpStatus.NOT_FOUND);
+        return new ErrorResponse(e.getMessage());
+    }
+
+
 }

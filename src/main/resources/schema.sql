@@ -1,30 +1,32 @@
 -- delete all tables
 
-DROP TABLE IF EXISTS users    CASCADE;
-DROP TABLE IF EXISTS items    CASCADE;
-DROP TABLE IF EXISTS bookings CASCADE;
-DROP TABLE IF EXISTS requests CASCADE;
-DROP TABLE IF EXISTS comments CASCADE;
+drop table IF EXISTS users    CASCADE;
+drop table IF EXISTS items    CASCADE;
+drop table IF EXISTS bookings CASCADE;
+drop table IF EXISTS requests CASCADE;
+drop table IF EXISTS comments CASCADE;
 
 -- create user related tables
 
-CREATE TABLE IF NOT EXISTS users
+create TABLE IF NOT EXISTS users
 (
   id    BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name 	VARCHAR(100) NOT NULL,
-  email VARCHAR(100) UNIQUE NOT NULL
+  email VARCHAR(100) UNIQUE NOT NULL,
+  UNIQUE(id)
 );
 
-CREATE TABLE IF NOT EXISTS requests 
+create TABLE IF NOT EXISTS requests
 (
   id           BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   requestor_id BIGINT,
   description  VARCHAR(1000) NOT NULL,
   created      TIMESTAMP NOT NULL,
-  CONSTRAINT   fk_request_to_users FOREIGN KEY(requestor_id) REFERENCES users(id) 
+  CONSTRAINT   fk_request_to_users FOREIGN KEY(requestor_id) REFERENCES users(id),
+  UNIQUE(id)
 );
 
-CREATE TABLE IF NOT EXISTS items
+create TABLE IF NOT EXISTS items
 (
   id           BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   owner_id     BIGINT,
@@ -37,7 +39,7 @@ CREATE TABLE IF NOT EXISTS items
   UNIQUE(id)
 );
 
-CREATE TABLE IF NOT EXISTS bookings 
+create TABLE IF NOT EXISTS bookings
 (
   id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   booker_id  BIGINT,
@@ -46,10 +48,11 @@ CREATE TABLE IF NOT EXISTS bookings
   end_date   TIMESTAMP NOT NULL,
   status     VARCHAR(10) NOT NULL,
   CONSTRAINT fk_bookings_to_users FOREIGN KEY(booker_id) REFERENCES users(id), 
-  CONSTRAINT fk_bookings_to_items FOREIGN KEY(item_id) REFERENCES items(id) 
+  CONSTRAINT fk_bookings_to_items FOREIGN KEY(item_id) REFERENCES items(id),
+  UNIQUE(id)
 );
 
-CREATE TABLE IF NOT EXISTS comments
+create TABLE IF NOT EXISTS comments
 (
   id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   author_id  BIGINT,
@@ -57,5 +60,6 @@ CREATE TABLE IF NOT EXISTS comments
   text       VARCHAR,
   created    TIMESTAMP,
   CONSTRAINT fk_comments_to_users FOREIGN KEY(author_id) REFERENCES users(id),
-  CONSTRAINT fk_comments_to_items FOREIGN KEY(item_id) REFERENCES items(id)
+  CONSTRAINT fk_comments_to_items FOREIGN KEY(item_id) REFERENCES items(id),
+  UNIQUE(id)
 );

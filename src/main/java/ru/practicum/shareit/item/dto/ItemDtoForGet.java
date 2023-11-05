@@ -62,7 +62,7 @@ import java.util.Objects;
  */
 @Data
 @Builder
-public class ItemDto {
+public class ItemDtoForGet {
     @Min(0)
     private long id;
     @NotEmpty(message = "Name is mandatory")
@@ -71,12 +71,15 @@ public class ItemDto {
     private final String description;
     @NotNull
     private Boolean available;
-    private Long requestId;
+    private BookingDtoForItemDto lastBooking;
+    private BookingDtoForItemDto nextBooking;
+    private Collection<CommentDto> comments;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ItemDto itemDto = (ItemDto) o;
+        ItemDtoForGet itemDto = (ItemDtoForGet) o;
         return id == itemDto.id;
     }
 

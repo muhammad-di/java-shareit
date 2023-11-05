@@ -1,12 +1,17 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.exception.*;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.model.Status;
+import ru.practicum.shareit.booking.pattern.strategy.impl.booker.BookingStateFetchStrategyForBooker;
+import ru.practicum.shareit.booking.pattern.strategy.impl.owner.BookingStateFetchStrategyForOwner;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.booking.validation.BookingValidation;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
@@ -16,12 +21,10 @@ import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,9 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final Map<String, BookingStateFetchStrategyForBooker> bookingStateFetchStrategyForBookerMap;
+    private final Map<String, BookingStateFetchStrategyForOwner> bookingStateFetchStrategyForOwnerMap;
+
 
     @Transactional
     public Booking save(Booking booking, long bookerId)
@@ -39,7 +45,8 @@ public class BookingServiceImpl implements BookingService {
             InvalidStartTimeException,
             InvalidEndTimeException,
             UserNotFoundException,
-            BookingNotFoundException, InvalidBookerException {
+            BookingNotFoundException,
+            InvalidBookerException {
         User booker = findUserById(bookerId);
         Item item = findItemById(booking.getItem().getId());
 
@@ -47,92 +54,59 @@ public class BookingServiceImpl implements BookingService {
         booking.setItem(item);
         booking.setStatus(Status.WAITING);
         BookingValidation.validate(booking);
-        bookingRepository.save(booking);
-        return findBookingById(booking.getId());
+        return bookingRepository.save(booking);
     }
 
     @Transactional
     public Booking approve(long bookingId, long ownerId, boolean approved)
-            throws BookingNotFoundException, BookingAlreadyApprovedException {
-        Optional<Booking> bookingOpt = bookingRepository.findBookingOptionalByIdAndOwnerId(bookingId, ownerId);
-        Booking booking = bookingOpt.orElseThrow(() -> new BookingNotFoundException("a booking does not exist"));
+            throws BookingNotFoundException, BookingAlreadyApprovedException, InvalidOwnerException {
+        Booking booking = findBookingById(bookingId);
 
-        if (booking.getStatus().equals(Status.APPROVED)) {
-            throw new BookingAlreadyApprovedException("a booking is already approved");
-        }
+        BookingValidation.validateForApprove(booking, ownerId);
         setStatus(booking, approved);
-        bookingRepository.save(booking);
-        return findBookingById(booking.getId());
+        return bookingRepository.save(booking);
     }
 
     @Transactional(readOnly = true)
-    public Booking findByBookerOrOwnerId(long bookingId, long bookerOrOwnerId)
-            throws BookingNotFoundException, UserNotFoundException {
-        findUserById(bookerOrOwnerId);
-        Booking bookingByBooker = bookingRepository.findByIdAndBookerId(bookingId, bookerOrOwnerId);
-        Booking bookingByOwner = bookingRepository.findBookingByIdAndOwnerId(bookingId, bookerOrOwnerId);
-        if (bookingByBooker == null && bookingByOwner == null) {
-            String message = String.format("a booking does not exist");
-            throw new BookingNotFoundException(message);
-        } else if (bookingByBooker == null) {
-            return bookingByOwner;
-        } else {
-            return bookingByBooker;
-        }
+    public Booking findById(long bookingId, long userId)
+            throws BookingNotFoundException, UserNotAllowedAccessBookingException {
+        Booking booking = findBookingById(bookingId);
+
+        BookingValidation.validateForFindById(booking, userId);
+        return booking;
     }
 
     @Transactional(readOnly = true)
-    public Collection<Booking> findAllByBookerId(long bookerId, String stateString)
+    public Collection<Booking> findAllByBookerId(long bookerId, String stateString, int from, int size)
             throws UserNotFoundException, UnsupportedStateException {
-        LocalDateTime currentTime = LocalDateTime.now();
-        State state = stringStateToEnumState(stateString);
+        String state = BookingValidation.validateStateForBooker(stateString);
+        Pageable sortedByStartDesc = PageRequest.of(from, size, Sort.by("start").descending());
 
-        findUserById(bookerId);
-        if (state.equals(State.ALL)) {
-            return bookingRepository.findAllByBookerIdOrderByIdDesc(bookerId);
-        } else if (state.equals(State.FUTURE)) {
-            return bookingRepository.findAllByBooker_IdAndStartAfterOrderByIdDesc(bookerId, currentTime);
-        } else if (state.equals(State.WAITING) || state.equals(State.REJECTED)) {
-            Status status = Status.valueOf(stateString);
-            return bookingRepository.findAllByBookerIdAndStatusOrderByIdDesc(bookerId, status);
-        } else if (state.equals(State.CURRENT)) {
-            return bookingRepository
-                    .findAllByBooker_IdAndStartLessThanEqualAndEndGreaterThanEqualOrderById(bookerId,
-                            currentTime,
-                            currentTime);
-        } else if (state.equals(State.PAST)) {
-            return bookingRepository
-                    .findAllByBooker_IdAndEndLessThanEqualOrderByStartDesc(bookerId, currentTime);
-        } else {
-            return Collections.emptyList();
+        existsUserById(bookerId);
+        BookingStateFetchStrategyForBooker strategy = bookingStateFetchStrategyForBookerMap.get(state);
+        if (strategy != null) {
+            Page<Booking> page = strategy.findAllByUserId(bookerId, sortedByStartDesc);
+            Collection<Booking> list = findAllWhenSizeTooBig(bookerId, state, page);
+            if (list == null) {
+                return page.stream().collect(Collectors.toList());
+            }
+            return list;
         }
+        return Collections.emptyList();
     }
 
     @Transactional(readOnly = true)
-    public Collection<Booking> findAllByOwnerId(long ownerId, String stateString)
+    public Collection<Booking> findAllByOwnerId(long ownerId, String stateString, int from, int size)
             throws UserNotFoundException, UnsupportedStateException {
-        LocalDateTime currentTime = LocalDateTime.now();
-        State state = stringStateToEnumState(stateString);
+        String state = BookingValidation.validateStateForOwner(stateString);
+        Pageable sortedByStartDesc = PageRequest.of(from, size, Sort.by("start").descending());
 
-        findUserById(ownerId);
-        if (state.equals(State.ALL)) {
-            return bookingRepository.findBookingByOwnerId(ownerId);
-        } else if (state.equals(State.FUTURE)) {
-            LocalDateTime current = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
-            return bookingRepository.findBookingByOwnerIdAndStartAfterOrderByIdDesc(ownerId, current);
-        } else if (state.equals(State.WAITING) || state.equals(State.REJECTED)) {
-            return bookingRepository.findBookingByOwnerIdAndStatus(ownerId, stateString);
-        } else if (state.equals(State.CURRENT)) {
-            return bookingRepository
-                    .findAllByItem_OwnerIdAndStartLessThanEqualAndEndGreaterThanEqualOrderByStart(ownerId,
-                            currentTime,
-                            currentTime);
-        } else if (state.equals(State.PAST)) {
-            return bookingRepository
-                    .findAllByItem_OwnerIdAndEndLessThanEqualOrderByStartDesc(ownerId, currentTime);
-        } else {
-            return Collections.emptyList();
+        existsUserById(ownerId);
+        BookingStateFetchStrategyForOwner strategy = bookingStateFetchStrategyForOwnerMap.get(state);
+        if (strategy != null) {
+            return strategy.findAllByUserId(ownerId, sortedByStartDesc);
         }
+        return Collections.emptyList();
     }
 
 
@@ -141,8 +115,13 @@ public class BookingServiceImpl implements BookingService {
             String message = String.format("a user with id { %d } does not exist", bookerId);
             return new UserNotFoundException(message);
         });
+    }
 
-
+    private void existsUserById(long bookerId) throws UserNotFoundException {
+        if (!userRepository.existsById(bookerId)) {
+            String message = String.format("a user with id { %d } does not exist", bookerId);
+            throw new UserNotFoundException(message);
+        }
     }
 
     private Booking findBookingById(long bookingId) throws BookingNotFoundException {
@@ -150,8 +129,6 @@ public class BookingServiceImpl implements BookingService {
             String message = String.format("a booking with id { %d } does not exist", bookingId);
             return new BookingNotFoundException(message);
         });
-
-
     }
 
     private Item findItemById(long itemId) throws ItemNotFoundException {
@@ -170,13 +147,20 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private State stringStateToEnumState(String str) throws UnsupportedStateException {
-        try {
-            return State.valueOf(str);
+    private Collection<Booking> findAllWhenSizeTooBig(long bookerId, String state, Page<Booking> page) {
+        int totalPages = page.getTotalPages();
+        int requestedPage = page.getNumber();
+        if (totalPages < requestedPage) {
+            int from = totalPages - 1;
+            int size = page.getSize();
 
-        } catch (IllegalArgumentException e) {
-            String message = "Unknown state: " + str;
-            throw new UnsupportedStateException(message);
+            Pageable sortedByStartDesc = PageRequest.of(from, size, Sort.by("start").descending());
+            return bookingStateFetchStrategyForBookerMap.get(state)
+                    .findAllByUserId(bookerId, sortedByStartDesc)
+                    .stream()
+                    .collect(Collectors.toList());
         }
+        return null;
     }
+
 }

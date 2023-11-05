@@ -8,11 +8,13 @@ import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.comment.mapper.CommentMapper;
 import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoForGet;
 import ru.practicum.shareit.item.exception.IncorrectBookerException;
 import ru.practicum.shareit.item.exception.IncorrectOwnerException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.exception.ItemRequestNotFoundException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 
 import javax.validation.Valid;
@@ -28,36 +30,36 @@ public class ItemController {
     private final ItemService service;
 
     @PostMapping
-    public ItemDto create(@RequestHeader("X-Sharer-User-Id") @Min(1) long userId,
+    public ItemDto create(@RequestHeader("X-Sharer-User-Id") @Min(1) long ownerId,
                           @Valid @RequestBody ItemDto itemDto)
-            throws UserNotFoundException {
+            throws UserNotFoundException, ItemRequestNotFoundException {
         Item item = ItemMapper.toItem(itemDto);
-        item = service.save(item, userId);
+        item = service.save(item, ownerId);
+        return ItemMapper.toItemDto(item);
+    }
+
+    @PatchMapping("/{itemId}")
+    public ItemDto update(@PathVariable @Min(1) long itemId,
+                          @RequestHeader("X-Sharer-User-Id") @Min(1) long ownerId,
+                          @RequestBody ItemDto itemDto)
+            throws UserNotFoundException, IncorrectOwnerException, ItemNotFoundException {
+        itemDto.setId(itemId);
+        Item item = service.update(itemDto, ownerId);
         return ItemMapper.toItemDto(item);
     }
 
 
     @GetMapping("/{itemId}")
-    public ItemDto findById(@PathVariable @Min(1) long itemId, @RequestHeader("X-Sharer-User-Id") @Min(1) long ownerOrBookerId
+    public ItemDtoForGet findById(@PathVariable @Min(1) long itemId,
+                                  @RequestHeader("X-Sharer-User-Id") @Min(1) long userId
     ) throws ItemNotFoundException {
-        return service.findById(itemId, ownerOrBookerId);
-    }
-
-    @PatchMapping("/{itemId}")
-    public ItemDto update(@PathVariable @Min(1) long itemId,
-                          @RequestHeader("X-Sharer-User-Id") @Min(1) long userId,
-                          @RequestBody ItemDto itemDto)
-            throws UserNotFoundException, IncorrectOwnerException, ItemNotFoundException {
-        Item item = ItemMapper.toItem(itemDto);
-        item.setId(itemId);
-        item = service.update(item, userId);
-        return ItemMapper.toItemDto(item);
+        return service.findById(itemId, userId);
     }
 
     @GetMapping
-    public Collection<ItemDto> findAllByOwnerId(@RequestHeader("X-Sharer-User-Id") @Min(1) long userId)
+    public Collection<ItemDtoForGet> findAllByOwnerId(@RequestHeader("X-Sharer-User-Id") @Min(1) long userId)
             throws UserNotFoundException {
-        return service.findAllByUserId(userId);
+        return service.findAllByOwnerId(userId);
     }
 
     @GetMapping("/search")

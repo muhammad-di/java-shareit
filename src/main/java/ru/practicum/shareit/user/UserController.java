@@ -30,9 +30,8 @@ public class UserController {
     @PatchMapping("/{userId}")
     @ResponseStatus(code = HttpStatus.OK)
     public UserDto update(@PathVariable long userId, @RequestBody UserDto userDto) throws UserNotFoundException {
-        User user = UserMapper.toUser(userDto);
-        user.setId(userId);
-        user = userService.update(user);
+        userDto.setId(userId);
+        User user = userService.update(userDto);
         return UserMapper.toUserDto(user);
     }
 
