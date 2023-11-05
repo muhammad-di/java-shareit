@@ -125,7 +125,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void setItemRequest(Item item) throws ItemRequestNotFoundException {
-        if(item.getRequest() != null) {
+        if (item.getRequest() != null) {
             ItemRequest itemRequest = itemRequestRepository.findById(item.getRequest().getId())
                     .orElseThrow(() -> {
                         String message = String.format("an item request with id { %d } does not exist", item.getRequest().getId());

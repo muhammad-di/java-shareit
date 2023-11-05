@@ -7,10 +7,6 @@ import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-
 @Component("ALL_BOOKER")
 @RequiredArgsConstructor
 public class BookingForBookerAllStateFetchForBooker implements BookingStateFetchStrategyForBooker {

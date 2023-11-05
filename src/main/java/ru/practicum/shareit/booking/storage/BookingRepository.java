@@ -50,10 +50,4 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                                                                  long bookerId,
                                                                  Status status,
                                                                  LocalDateTime currentDateTime);
-
-
-    /////////////
-    List<Booking> findFirst1ByBookerIdAndStartBeforeOrderByStartAsc(long bookerId, LocalDateTime start);
-    List<Booking> findByBookerIdOrderByStartAsc(long bookerId);
-
 }
