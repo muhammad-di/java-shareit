@@ -43,6 +43,17 @@ public class ItemTest {
     }
 
     @Test
+    void testConstructor() throws Exception {
+        Item itemCopy2 = new Item(itemCopy1.getId(),
+                itemCopy1.getName(),
+                itemCopy1.getDescription(),
+                itemCopy1.getRequest(),
+                itemCopy1.getAvailable(),
+                itemCopy1.getOwner());
+        assertThat(item1, equalTo(itemCopy2));
+    }
+
+    @Test
     void testEqual() throws Exception {
         assertThat(item1, equalTo(itemCopy1));
     }
