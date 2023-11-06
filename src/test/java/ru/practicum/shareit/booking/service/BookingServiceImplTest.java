@@ -30,6 +30,7 @@ import ru.practicum.shareit.user.storage.UserRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -154,7 +155,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    void testFindAllByBookerId() throws UserNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, ItemNotFoundException, InvalidEndTimeException, InvalidOwnerException, BookingAlreadyApprovedException, UserNotAllowedAccessBookingException, UnsupportedStateException {
+    void testFindAllByBookerIdALL() throws UserNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, ItemNotFoundException, InvalidEndTimeException, InvalidOwnerException, BookingAlreadyApprovedException, UserNotAllowedAccessBookingException, UnsupportedStateException {
         User cBooker1 = userRepository.saveAndFlush(booker1);
         User cOwner1 = userRepository.saveAndFlush(owner1);
         item1.setOwner(cOwner1);
@@ -166,6 +167,95 @@ public class BookingServiceImplTest {
 
         TypedQuery<Booking> query = em.createQuery("Select b from Booking b where b.booker.id = :id", Booking.class);
         Collection<Booking> expected = query.setParameter("id", cBooker1.getId()).getResultList();
+
+        assertThat(actual, samePropertyValuesAs(expected));
+    }
+
+    @Test
+    void testFindAllByBookerIdPAST() throws UserNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, ItemNotFoundException, InvalidEndTimeException, InvalidOwnerException, BookingAlreadyApprovedException, UserNotAllowedAccessBookingException, UnsupportedStateException {
+        User cBooker1 = userRepository.saveAndFlush(booker1);
+        User cOwner1 = userRepository.saveAndFlush(owner1);
+        item1.setOwner(cOwner1);
+        Item cItem1 = itemRepository.saveAndFlush(item1);
+        Booking cBooking1 = service.save(booking1, cBooker1.getId());
+        Booking cUpdatedBooking1 = service.approve(cBooking1.getId(), cOwner1.getId(), true);
+
+        Collection<Booking> actual = service.findAllByBookerId(cBooker1.getId(), "PAST", 0, 1);
+
+        TypedQuery<Booking> query = em.createQuery("Select b from Booking b where b.booker.id = :id", Booking.class);
+        Collection<Booking> expected1 = query.setParameter("id", cBooker1.getId()).getResultList();
+        Collection<Booking> expected = new ArrayList<>();
+
+        assertThat(actual, samePropertyValuesAs(expected));
+    }
+
+    @Test
+    void testFindAllByBookerIdCURRENT() throws UserNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, ItemNotFoundException, InvalidEndTimeException, InvalidOwnerException, BookingAlreadyApprovedException, UserNotAllowedAccessBookingException, UnsupportedStateException {
+        User cBooker1 = userRepository.saveAndFlush(booker1);
+        User cOwner1 = userRepository.saveAndFlush(owner1);
+        item1.setOwner(cOwner1);
+        Item cItem1 = itemRepository.saveAndFlush(item1);
+        Booking cBooking1 = service.save(booking1, cBooker1.getId());
+        Booking cUpdatedBooking1 = service.approve(cBooking1.getId(), cOwner1.getId(), true);
+
+        Collection<Booking> actual = service.findAllByBookerId(cBooker1.getId(), "CURRENT", 0, 1);
+
+        TypedQuery<Booking> query = em.createQuery("Select b from Booking b where b.booker.id = :id", Booking.class);
+        Collection<Booking> expected1 = query.setParameter("id", cBooker1.getId()).getResultList();
+        Collection<Booking> expected = new ArrayList<>();
+
+        assertThat(actual, samePropertyValuesAs(expected));
+    }
+
+    @Test
+    void testFindAllByBookerIdFUTURE() throws UserNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, ItemNotFoundException, InvalidEndTimeException, InvalidOwnerException, BookingAlreadyApprovedException, UserNotAllowedAccessBookingException, UnsupportedStateException {
+        User cBooker1 = userRepository.saveAndFlush(booker1);
+        User cOwner1 = userRepository.saveAndFlush(owner1);
+        item1.setOwner(cOwner1);
+        Item cItem1 = itemRepository.saveAndFlush(item1);
+        Booking cBooking1 = service.save(booking1, cBooker1.getId());
+        Booking cUpdatedBooking1 = service.approve(cBooking1.getId(), cOwner1.getId(), true);
+
+        Collection<Booking> actual = service.findAllByBookerId(cBooker1.getId(), "FUTURE", 0, 1);
+
+        TypedQuery<Booking> query = em.createQuery("Select b from Booking b where b.booker.id = :id", Booking.class);
+        Collection<Booking> expected = query.setParameter("id", cBooker1.getId()).getResultList();
+
+        assertThat(actual, samePropertyValuesAs(expected));
+    }
+
+    @Test
+    void testFindAllByBookerIdWAITING() throws UserNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, ItemNotFoundException, InvalidEndTimeException, InvalidOwnerException, BookingAlreadyApprovedException, UserNotAllowedAccessBookingException, UnsupportedStateException {
+        User cBooker1 = userRepository.saveAndFlush(booker1);
+        User cOwner1 = userRepository.saveAndFlush(owner1);
+        item1.setOwner(cOwner1);
+        Item cItem1 = itemRepository.saveAndFlush(item1);
+        Booking cBooking1 = service.save(booking1, cBooker1.getId());
+        Booking cUpdatedBooking1 = service.approve(cBooking1.getId(), cOwner1.getId(), true);
+
+        Collection<Booking> actual = service.findAllByBookerId(cBooker1.getId(), "WAITING", 0, 1);
+
+        TypedQuery<Booking> query = em.createQuery("Select b from Booking b where b.booker.id = :id", Booking.class);
+        Collection<Booking> expected1 = query.setParameter("id", cBooker1.getId()).getResultList();
+        Collection<Booking> expected = new ArrayList<>();
+
+        assertThat(actual, samePropertyValuesAs(expected));
+    }
+
+    @Test
+    void testFindAllByBookerIdREJECTED() throws UserNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, ItemNotFoundException, InvalidEndTimeException, InvalidOwnerException, BookingAlreadyApprovedException, UserNotAllowedAccessBookingException, UnsupportedStateException {
+        User cBooker1 = userRepository.saveAndFlush(booker1);
+        User cOwner1 = userRepository.saveAndFlush(owner1);
+        item1.setOwner(cOwner1);
+        Item cItem1 = itemRepository.saveAndFlush(item1);
+        Booking cBooking1 = service.save(booking1, cBooker1.getId());
+        Booking cUpdatedBooking1 = service.approve(cBooking1.getId(), cOwner1.getId(), true);
+
+        Collection<Booking> actual = service.findAllByBookerId(cBooker1.getId(), "REJECTED", 0, 1);
+
+        TypedQuery<Booking> query = em.createQuery("Select b from Booking b where b.booker.id = :id", Booking.class);
+        Collection<Booking> expected1 = query.setParameter("id", cBooker1.getId()).getResultList();
+        Collection<Booking> expected = new ArrayList<>();
 
         assertThat(actual, samePropertyValuesAs(expected));
     }

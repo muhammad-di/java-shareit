@@ -13,9 +13,11 @@ import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BookingDtoTest {
 
@@ -63,5 +65,18 @@ public class BookingDtoTest {
 
         assertThat(dto.getId(), equalTo(booking1.getId()));
         assertThat(dto.getBookerId(), equalTo(booking1.getBooker().getId()));
+    }
+
+    @Test
+    void testBookingDtoForItemDtoEquals() throws Exception {
+        booking1.setEnd(testStart);
+        booking1.setStart(testEnd);
+
+        BookingDtoForItemDto dto = BookingMapping.toBookingDtoForItemDto(booking1);
+        BookingDtoForItemDto dto1 = dto;
+
+        assertTrue(dto.equals(dto1));
+        assertThat(dto.hashCode(), equalTo(Objects.hash(dto.getId())));
+        assertThat(dto.toString(), equalTo("BookingDtoForItemDto(id=1, bookerId=2)"));
     }
 }
