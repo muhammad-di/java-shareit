@@ -109,14 +109,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
 
-    private void existsUserById(long userId) throws UserNotFoundException {
+    public boolean existsUserById(long userId) throws UserNotFoundException {
         if (!userRepository.existsById(userId)) {
             String message = String.format("a user with id { %d } does not exist", userId);
             throw new UserNotFoundException(message);
         }
+        return true;
     }
 
-    private User getUser(long userId) throws UserNotFoundException {
+    public User getUser(long userId) throws UserNotFoundException {
         return userRepository.findById(userId)
                 .orElseThrow(() -> {
                     String message = String.format("a user with id { %d } does not exist", userId);
@@ -124,7 +125,7 @@ public class ItemServiceImpl implements ItemService {
                 });
     }
 
-    private void setItemRequest(Item item) throws ItemRequestNotFoundException {
+    public void setItemRequest(Item item) throws ItemRequestNotFoundException {
         if (item.getRequest() != null) {
             ItemRequest itemRequest = itemRequestRepository.findById(item.getRequest().getId())
                     .orElseThrow(() -> {
@@ -135,7 +136,7 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    private Item findItemById(long id) throws ItemNotFoundException {
+    public Item findItemById(long id) throws ItemNotFoundException {
         return itemRepository.findById(id)
                 .orElseThrow(() -> {
                     String message = String.format("an item with id { %d } does not exist", id);
@@ -143,7 +144,7 @@ public class ItemServiceImpl implements ItemService {
                 });
     }
 
-    private Booking findBookingByItemIdAndBookerId(long itemId, long bookerId) throws IncorrectBookerException {
+    public Booking findBookingByItemIdAndBookerId(long itemId, long bookerId) throws IncorrectBookerException {
         LocalDateTime currentDateTime = LocalDateTime.now();
         return bookingRepository
                 .findByItemIdAndBookerIdAndStatusAndStartBefore(itemId, bookerId, Status.APPROVED, currentDateTime)
@@ -155,14 +156,14 @@ public class ItemServiceImpl implements ItemService {
                 });
     }
 
-    private void validateOwner(User owner, long ownerId) throws IncorrectOwnerException {
+    public void validateOwner(User owner, long ownerId) throws IncorrectOwnerException {
         if (owner.getId() != ownerId) {
             String message = "a wrong owner exception";
             throw new IncorrectOwnerException(message);
         }
     }
 
-    private ItemDtoForGet setBookings(ItemDtoForGet itemDto) {
+    public ItemDtoForGet setBookings(ItemDtoForGet itemDto) {
         LocalDateTime currentDateTime = LocalDateTime.now();
 
         List<Booking> lastBookingList = bookingRepository
@@ -181,7 +182,7 @@ public class ItemServiceImpl implements ItemService {
         return itemDto;
     }
 
-    private void setComments(ItemDtoForGet itemDto) {
+    public void setComments(ItemDtoForGet itemDto) {
         List<CommentDto> listOfCommentsDto = commentRepository.findAllByItemId(itemDto.getId())
                 .stream()
                 .map(CommentMapper::toCommentDto)

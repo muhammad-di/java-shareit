@@ -16,6 +16,7 @@ import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.comment.mapper.CommentMapper;
 import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.item.ItemService;
+import ru.practicum.shareit.item.ItemServiceImpl;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForGet;
 import ru.practicum.shareit.item.exception.IncorrectBookerException;
@@ -55,6 +56,9 @@ public class ItemServiceImplTest {
 
     @Autowired
     private final ItemService service;
+
+    @Autowired
+    private final ItemServiceImpl serviceImpl;
 
     @Autowired
     private final BookingService bookingService;
@@ -210,6 +214,27 @@ public class ItemServiceImplTest {
         );
 
         assertThat(exception.getErrorMessage(), equalTo("MASSAGE: a booking does not exist; ERROR CODE: null"));
+
+    }
+
+
+    @Test
+    void testExistsUserById() throws UserNotFoundException, ItemRequestNotFoundException, IncorrectBookerException, ItemNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, InvalidEndTimeException {
+        User cBooker = userRepository.saveAndFlush(booker1);
+        Boolean isUser = serviceImpl.existsUserById(cBooker.getId());
+
+        assertThat(isUser, equalTo(true));
+
+    }
+
+    @Test
+    void testExistsUserById2() throws UserNotFoundException, ItemRequestNotFoundException, IncorrectBookerException, ItemNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, InvalidEndTimeException {
+        User cBooker = userRepository.saveAndFlush(booker1);
+        final UserNotFoundException exception = Assertions.assertThrows(
+                UserNotFoundException.class,
+                () -> serviceImpl.existsUserById(500L)
+        );
+        assertThat(exception.getErrorMessage(), equalTo("MASSAGE: a user with id { 500 } does not exist; ERROR CODE: null"));
 
     }
 
