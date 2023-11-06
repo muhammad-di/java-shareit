@@ -15,11 +15,6 @@ public class IncorrectOwnerException extends Exception {
         this.errorCode = errorCode;
     }
 
-    public IncorrectOwnerException(String message, Throwable cause, HttpStatus errorCode) {
-        super(message, cause);
-        this.errorCode = errorCode;
-    }
-
     public HttpStatus getErrorCode() {
         return errorCode;
     }
