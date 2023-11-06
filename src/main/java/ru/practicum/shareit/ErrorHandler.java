@@ -39,12 +39,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMethodArgumentNotValidException(final MissingRequestHeaderException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleIncorrectOwnerException(final IncorrectOwnerException e) {
         e.setErrorCode(HttpStatus.FORBIDDEN);
@@ -68,21 +62,21 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleItemNotAvailableException(final ItemNotAvailableException e) {
         e.setErrorCode(HttpStatus.BAD_REQUEST);
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(e.getErrorMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidEndTimeException(final InvalidEndTimeException e) {
         e.setErrorCode(HttpStatus.BAD_REQUEST);
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(e.getErrorMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidStartTimeException(final InvalidStartTimeException e) {
         e.setErrorCode(HttpStatus.BAD_REQUEST);
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(e.getErrorMessage());
     }
 
     @ExceptionHandler
@@ -96,49 +90,49 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleBookingNotFoundException(final BookingNotFoundException e) {
         e.setErrorCode(HttpStatus.NOT_FOUND);
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(e.getErrorMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBookingAlreadyApprovedException(final BookingAlreadyApprovedException e) {
         e.setErrorCode(HttpStatus.BAD_REQUEST);
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(e.getErrorMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleInvalidBookerException(final InvalidBookerException e) {
         e.setErrorCode(HttpStatus.NOT_FOUND);
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(e.getErrorMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIncorrectBookerException(final IncorrectBookerException e) {
         e.setErrorCode(HttpStatus.BAD_REQUEST);
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(e.getErrorMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleInvalidOwnerException(final InvalidOwnerException e) {
         e.setErrorCode(HttpStatus.NOT_FOUND);
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(e.getErrorMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserNotAllowedAccessBookingException(final UserNotAllowedAccessBookingException e) {
         e.setErrorCode(HttpStatus.NOT_FOUND);
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(e.getErrorMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleItemRequestNotFoundException(final ItemRequestNotFoundException e) {
         e.setErrorCode(HttpStatus.NOT_FOUND);
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(e.getErrorMessage());
     }
 
 

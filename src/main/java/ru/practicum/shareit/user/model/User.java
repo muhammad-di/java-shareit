@@ -42,11 +42,4 @@ public class User {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    public Map<String, Object> toMap() {
-        Map<String, Object> value = new HashMap<>();
-        value.put("name", name);
-        value.put("email", email);
-        return value;
-    }
 }
