@@ -55,7 +55,7 @@ public class BookingControllerTest {
     private User booker1;
     private UserDto bookerDto1;
     private Booking booking1;
-    private BookingDto bookingDto1;
+    public BookingDto bookingDto1;
 
 
     @BeforeEach
@@ -81,7 +81,7 @@ public class BookingControllerTest {
     }
 
     @Test
-    void createShouldReturnNewUser() throws Exception {
+    public void createShouldReturnNewUser() throws Exception {
         when(bookingService.save(any(Booking.class), anyLong()))
                 .thenReturn(booking1);
 
@@ -99,7 +99,7 @@ public class BookingControllerTest {
     }
 
     @Test
-    void createShouldThrowBookingNotFoundException() throws Exception {
+     void createShouldThrowBookingNotFoundException() throws Exception {
         when(bookingService.save(any(Booking.class), anyLong()))
                 .thenThrow(BookingNotFoundException.class);
 
