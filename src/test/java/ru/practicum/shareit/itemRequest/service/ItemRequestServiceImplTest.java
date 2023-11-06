@@ -134,7 +134,7 @@ public class ItemRequestServiceImplTest {
 
         ItemRequest request = ItemRequestMapper.toItemRequest(itemRequestDtoForRequestBody1);
         request.setRequestor(requestor);
-        ItemRequest actual  = itemRequestService.save(request, requestor.getId());
+        ItemRequest actual = itemRequestService.save(request, requestor.getId());
 
         TypedQuery<ItemRequest> query = em.createQuery("Select it from ItemRequest it where it.id = :id", ItemRequest.class);
         ItemRequest expected = query.setParameter("id", actual.getId()).getSingleResult();
@@ -150,7 +150,7 @@ public class ItemRequestServiceImplTest {
 
         ItemRequest request = ItemRequestMapper.toItemRequest(itemRequestDtoForRequestBody1);
         request.setRequestor(requestor);
-        ItemRequest cItemRequest  = itemRequestService.save(request, requestor.getId());
+        ItemRequest cItemRequest = itemRequestService.save(request, requestor.getId());
 
         ItemRequestDtoForResponseBody actual = itemRequestService.findById(cItemRequest.getId(), requestor.getId());
 
@@ -163,21 +163,21 @@ public class ItemRequestServiceImplTest {
     }
 
     @Test
-    void testfindAllByRequestorId() throws UserNotFoundException, ItemRequestNotFoundException, ItemNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, InterruptedException, InvalidEndTimeException {
+    void testFindAllByRequestorId() throws UserNotFoundException, ItemRequestNotFoundException, ItemNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, InterruptedException, InvalidEndTimeException {
 
         User requestor = createForComment();
 
         ItemRequest request = ItemRequestMapper.toItemRequest(itemRequestDtoForRequestBody1);
         request.setRequestor(requestor);
-        ItemRequest cItemRequest  = itemRequestService.save(request, requestor.getId());
+        ItemRequest cItemRequest = itemRequestService.save(request, requestor.getId());
 
         Collection<ItemRequestDtoForResponseBody> actual = itemRequestService.findAllByRequestorId(requestor.getId());
 
         TypedQuery<ItemRequest> query = em.createQuery("Select it from ItemRequest it where it.requestor.id = :id", ItemRequest.class);
-        Collection <ItemRequest> expected1 = query.setParameter("id", requestor.getId()).getResultList();
+        Collection<ItemRequest> expected1 = query.setParameter("id", requestor.getId()).getResultList();
         Collection<ItemRequestDtoForResponseBody> expected = expected1.stream()
                 .map(ItemRequestMapper::toItemRequestDtoForResponseBody)
-                .peek(ir-> ir.setItems(Collections.emptyList()))
+                .peek(ir -> ir.setItems(Collections.emptyList()))
                 .collect(Collectors.toList());
 
         assertThat(actual, samePropertyValuesAs(expected));
@@ -190,15 +190,15 @@ public class ItemRequestServiceImplTest {
 
         ItemRequest request = ItemRequestMapper.toItemRequest(itemRequestDtoForRequestBody1);
         request.setRequestor(requestor);
-        ItemRequest cItemRequest  = itemRequestService.save(request, requestor.getId());
+        ItemRequest cItemRequest = itemRequestService.save(request, requestor.getId());
 
         Collection<ItemRequestDtoForResponseBody> actual = itemRequestService.findAll(requestor.getId(), 2, 1);
 
         TypedQuery<ItemRequest> query = em.createQuery("Select it from ItemRequest it where it.requestor.id = :id", ItemRequest.class);
-        Collection <ItemRequest> expected1 = query.setParameter("id", requestor.getId()).getResultList();
+        Collection<ItemRequest> expected1 = query.setParameter("id", requestor.getId()).getResultList();
         Collection<ItemRequestDtoForResponseBody> expected = expected1.stream()
                 .map(ItemRequestMapper::toItemRequestDtoForResponseBody)
-                .peek(ir-> ir.setItems(Collections.emptyList()))
+                .peek(ir -> ir.setItems(Collections.emptyList()))
                 .collect(Collectors.toList());
 
         assertThat(actual, samePropertyValuesAs(new ArrayList<ItemRequestDtoForResponseBody>()));

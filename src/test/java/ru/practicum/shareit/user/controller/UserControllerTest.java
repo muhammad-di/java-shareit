@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.user.UserController;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
 
 import java.nio.charset.StandardCharsets;
@@ -96,6 +98,20 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.id", is(userDto1.getId()), Long.class))
                 .andExpect(jsonPath("$.name", is(userDto1.getName())))
                 .andExpect(jsonPath("$.email", is(userDto1.getEmail())));
+    }
+
+    @Test
+    void updateShouldThrowException() throws Exception {
+        when(userService.update(any(UserDto.class)))
+                .thenThrow(UserNotFoundException.class);
+
+        mvc.perform(patch("/users/1")
+                        .param("userId", "1")
+                        .content(mapper.writeValueAsString(userDto1))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test

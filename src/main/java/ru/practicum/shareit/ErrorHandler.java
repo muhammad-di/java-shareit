@@ -12,7 +12,6 @@ import ru.practicum.shareit.booking.exception.*;
 import ru.practicum.shareit.item.exception.*;
 import ru.practicum.shareit.request.exception.ItemRequestNotFoundException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
-import ru.practicum.shareit.user.exception.UserWithEmailAlreadyExists;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,16 +19,6 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleUserWithEmailAlreadyExistsException(final UserWithEmailAlreadyExists e) {
-        e.setErrorCode(HttpStatus.CONFLICT);
-        return new ErrorResponse(
-                e.getErrorMessage()
-        );
-    }
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserNotFoundException(final UserNotFoundException e) {
@@ -56,13 +45,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleInvalidRequestHeaderException(final InvalidRequestHeaderException e) {
-        e.setErrorCode(HttpStatus.BAD_REQUEST);
-        return new ErrorResponse(e.getErrorMessage());
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleIncorrectOwnerException(final IncorrectOwnerException e) {
         e.setErrorCode(HttpStatus.FORBIDDEN);
@@ -74,20 +56,6 @@ public class ErrorHandler {
     public ErrorResponse handleItemNotFoundException(final ItemNotFoundException e) {
         e.setErrorCode(HttpStatus.NOT_FOUND);
         return new ErrorResponse(e.getErrorMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handlePathNotFoundException(final PathNotFoundException e) {
-        e.setErrorCode(HttpStatus.NOT_FOUND);
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleInvalidRequestParamException(final InvalidRequestParamException e) {
-        e.setErrorCode(HttpStatus.BAD_REQUEST);
-        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
@@ -148,13 +116,6 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIncorrectBookerException(final IncorrectBookerException e) {
-        e.setErrorCode(HttpStatus.BAD_REQUEST);
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleBookingInFutureException(final BookingInFutureException e) {
         e.setErrorCode(HttpStatus.BAD_REQUEST);
         return new ErrorResponse(e.getMessage());
     }
