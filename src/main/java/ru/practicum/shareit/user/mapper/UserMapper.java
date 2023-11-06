@@ -19,4 +19,32 @@ public class UserMapper {
                 .email(userDto.getEmail())
                 .build();
     }
+
+    public static User toUserForUpdate(UserDto userDto, User userFromBd) {
+        return User.builder()
+                .id(userDto.getId())
+                .name(getName(userDto, userFromBd))
+                .email(getEmail(userDto, userFromBd))
+                .build();
+    }
+
+    private static String getName(UserDto userDto, User userFromBd) {
+        if (userDto.getName() != null) {
+            return userDto.getName();
+        } else if (userFromBd.getName() != null) {
+            return userFromBd.getName();
+        } else {
+            return null;
+        }
+    }
+
+    private static String getEmail(UserDto userDto, User userFromBd) {
+        if (userDto.getEmail() != null) {
+            return userDto.getEmail();
+        } else if (userFromBd.getEmail() != null) {
+            return userFromBd.getEmail();
+        } else {
+            return null;
+        }
+    }
 }

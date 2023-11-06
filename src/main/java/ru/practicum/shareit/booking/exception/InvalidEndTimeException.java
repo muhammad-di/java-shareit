@@ -10,16 +10,6 @@ public class InvalidEndTimeException extends Exception {
         super(message);
     }
 
-    public InvalidEndTimeException(String message, HttpStatus errorCode) {
-        super(message);
-        this.errorCode = errorCode;
-    }
-
-    public InvalidEndTimeException(String message, Throwable cause, HttpStatus errorCode) {
-        super(message, cause);
-        this.errorCode = errorCode;
-    }
-
     public HttpStatus getErrorCode() {
         return errorCode;
     }

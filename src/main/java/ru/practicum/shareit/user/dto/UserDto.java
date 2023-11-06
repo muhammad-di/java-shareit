@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,6 +11,7 @@ import java.util.Objects;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class UserDto {
     @Min(0)
     private long id;

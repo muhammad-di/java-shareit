@@ -10,16 +10,6 @@ public class IncorrectBookerException extends Exception {
         super(message);
     }
 
-    public IncorrectBookerException(String message, HttpStatus errorCode) {
-        super(message);
-        this.errorCode = errorCode;
-    }
-
-    public IncorrectBookerException(String message, Throwable cause, HttpStatus errorCode) {
-        super(message, cause);
-        this.errorCode = errorCode;
-    }
-
     public HttpStatus getErrorCode() {
         return errorCode;
     }

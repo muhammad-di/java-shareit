@@ -15,15 +15,6 @@ public class UserNotFoundException extends Exception {
         this.errorCode = errorCode;
     }
 
-    public UserNotFoundException(String message, Throwable cause, HttpStatus errorCode) {
-        super(message, cause);
-        this.errorCode = errorCode;
-    }
-
-    public UserNotFoundException() {
-
-    }
-
     public HttpStatus getErrorCode() {
         return errorCode;
     }

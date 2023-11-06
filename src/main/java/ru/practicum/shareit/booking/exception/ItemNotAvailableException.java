@@ -10,16 +10,6 @@ public class ItemNotAvailableException extends Exception {
         super(message);
     }
 
-    public ItemNotAvailableException(String message, HttpStatus errorCode) {
-        super(message);
-        this.errorCode = errorCode;
-    }
-
-    public ItemNotAvailableException(String message, Throwable cause, HttpStatus errorCode) {
-        super(message, cause);
-        this.errorCode = errorCode;
-    }
-
     public HttpStatus getErrorCode() {
         return errorCode;
     }

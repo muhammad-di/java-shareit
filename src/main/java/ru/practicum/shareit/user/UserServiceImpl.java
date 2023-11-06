@@ -3,7 +3,9 @@ package ru.practicum.shareit.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
+import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
@@ -13,6 +15,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+
+
+    @Transactional
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public User update(UserDto userDto) throws UserNotFoundException {
+        User userFromDb = getUser(userDto.getId());
+        User user = UserMapper.toUserForUpdate(userDto, userFromDb);
+
+        return userRepository.save(user);
+    }
 
     @Transactional(readOnly = true)
     @Override
@@ -25,25 +43,6 @@ public class UserServiceImpl implements UserService {
         return getUser(id);
     }
 
-    @Transactional
-    @Override
-    public User save(User user) {
-        return userRepository.save(user);
-    }
-
-    @Transactional
-    @Override
-    public User update(User user) throws UserNotFoundException {
-        if (user.getEmail() == null && user.getName() != null) {
-            userRepository.updateName(user.getName(), user.getId());
-            return getUser(user.getId());
-        } else if (user.getEmail() != null && user.getName() == null) {
-            userRepository.updateEmail(user.getEmail(), user.getId());
-            return getUser(user.getId());
-        } else {
-            return userRepository.save(user);
-        }
-    }
 
     @Transactional
     @Override

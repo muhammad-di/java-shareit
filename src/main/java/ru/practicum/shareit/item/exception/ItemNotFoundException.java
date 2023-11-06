@@ -15,11 +15,6 @@ public class ItemNotFoundException extends Exception {
         this.errorCode = errorCode;
     }
 
-    public ItemNotFoundException(String message, Throwable cause, HttpStatus errorCode) {
-        super(message, cause);
-        this.errorCode = errorCode;
-    }
-
     public HttpStatus getErrorCode() {
         return errorCode;
     }

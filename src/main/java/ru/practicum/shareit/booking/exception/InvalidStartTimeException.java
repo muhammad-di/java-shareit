@@ -10,16 +10,6 @@ public class InvalidStartTimeException extends Exception {
         super(message);
     }
 
-    public InvalidStartTimeException(String message, HttpStatus errorCode) {
-        super(message);
-        this.errorCode = errorCode;
-    }
-
-    public InvalidStartTimeException(String message, Throwable cause, HttpStatus errorCode) {
-        super(message, cause);
-        this.errorCode = errorCode;
-    }
-
     public HttpStatus getErrorCode() {
         return errorCode;
     }
