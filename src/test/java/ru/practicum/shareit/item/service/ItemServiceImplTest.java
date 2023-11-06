@@ -325,4 +325,23 @@ public class ItemServiceImplTest {
 
     }
 
+
+
+    @Test
+    void findBookingByItemIdAndBookerId2() throws UserNotFoundException, IncorrectBookerException {
+        User cBooker = userRepository.saveAndFlush(booker1);
+        User cOwner = userRepository.saveAndFlush(owner1);
+        item1.setOwner(cOwner);
+        Item cItem = itemRepository.saveAndFlush(item1);
+        Booking booking1 = Booking.builder().booker(cBooker).item(cItem).start(LocalDateTime.now().plusSeconds(1)).end(LocalDateTime.now().plusSeconds(3)).status(Status.APPROVED).build();
+        Booking cBooking = bookingRepository.saveAndFlush(booking1);
+
+        final IncorrectBookerException exception = Assertions.assertThrows(
+                IncorrectBookerException.class,
+                () -> serviceImpl.findBookingByItemIdAndBookerId(cItem.getId(), 400L)
+        );
+        assertThat(exception.getErrorMessage(), equalTo("MASSAGE: a booking does not exist; ERROR CODE: null"));
+
+    }
+
 }

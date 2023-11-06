@@ -81,7 +81,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         }
     }
 
-    //
+
     private User getUser(long userId) throws UserNotFoundException {
         return userRepository.findById(userId)
                 .orElseThrow(() -> {
