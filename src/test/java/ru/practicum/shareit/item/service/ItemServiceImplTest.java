@@ -273,4 +273,30 @@ public class ItemServiceImplTest {
         assertThat(cBooker, equalTo(booker1));
     }
 
+
+    @Test
+    void testGetItem() throws UserNotFoundException, ItemRequestNotFoundException, IncorrectBookerException, ItemNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, InvalidEndTimeException {
+        User cBooker = userRepository.saveAndFlush(booker1);;
+        item1.setOwner(cBooker);
+        Item cItem = itemRepository.save(item1);
+        Item rItem = serviceImpl.findItemById(cItem.getId());
+
+        assertThat(rItem, equalTo(cItem));
+
+    }
+
+    @Test
+    void testGetItem1() {
+        User cBooker = userRepository.saveAndFlush(booker1);;
+        item1.setOwner(cBooker);
+        Item cItem = itemRepository.save(item1);
+
+        final ItemNotFoundException exception = Assertions.assertThrows(
+                ItemNotFoundException.class,
+                () -> serviceImpl.findItemById(400L)
+        );
+        assertThat(exception.getErrorMessage(), equalTo("MASSAGE: an item with id { 400 } does not exist; ERROR CODE: null"));
+
+    }
+
 }
