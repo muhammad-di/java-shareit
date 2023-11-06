@@ -10,20 +10,6 @@ public class ItemRequestNotFoundException extends Exception {
         super(message);
     }
 
-    public ItemRequestNotFoundException(String message, HttpStatus errorCode) {
-        super(message);
-        this.errorCode = errorCode;
-    }
-
-    public ItemRequestNotFoundException(String message, Throwable cause, HttpStatus errorCode) {
-        super(message, cause);
-        this.errorCode = errorCode;
-    }
-
-    public ItemRequestNotFoundException() {
-
-    }
-
     public HttpStatus getErrorCode() {
         return errorCode;
     }
