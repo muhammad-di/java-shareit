@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForGet;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
@@ -68,10 +67,41 @@ public class ItemMapperTest {
     @Test
     void testToItemForUpdate() throws Exception {
         Item item11 = ItemMapper.toItemForUpdate(itemDto1, item1);
-        Item item22 = ItemMapper.toItemForUpdate(itemDtoCopy1,itemCopy1 );
+        Item item22 = ItemMapper.toItemForUpdate(itemDtoCopy1, itemCopy1);
 
         assertThat(item11, equalTo(item22));
     }
 
+    @Test
+    void testToItemForUpdate1() throws Exception {
+        ItemDto dto = ItemDto.builder().id(itemDto1.getId()).description(itemDto1.getDescription()).available(true).build();
+        ItemDto dto1 = ItemDto.builder().id(itemDto1.getId()).description(itemDto1.getDescription()).available(true).build();
 
+        Item item11 = ItemMapper.toItemForUpdate(dto, item1);
+        Item item22 = ItemMapper.toItemForUpdate(dto1, itemCopy1);
+
+        assertThat(item11, equalTo(item22));
+    }
+
+    @Test
+    void testToItemForUpdate2() throws Exception {
+        ItemDto dto = ItemDto.builder().id(itemDto1.getId()).name(itemDto1.getName()).available(true).build();
+        ItemDto dto1 = ItemDto.builder().id(itemDto1.getId()).name(itemDto1.getName()).available(true).build();
+
+        Item item11 = ItemMapper.toItemForUpdate(dto, item1);
+        Item item22 = ItemMapper.toItemForUpdate(dto1, itemCopy1);
+
+        assertThat(item11, equalTo(item22));
+    }
+
+    @Test
+    void testToItemForUpdate3() throws Exception {
+        ItemDto dto = ItemDto.builder().id(itemDto1.getId()).name(itemDto1.getName()).description(itemDto1.getDescription()).build();
+        ItemDto dto1 = ItemDto.builder().id(itemDto1.getId()).name(itemDto1.getName()).description(itemDto1.getDescription()).build();
+
+        Item item11 = ItemMapper.toItemForUpdate(dto, item1);
+        Item item22 = ItemMapper.toItemForUpdate(dto1, itemCopy1);
+
+        assertThat(item11, equalTo(item22));
+    }
 }
