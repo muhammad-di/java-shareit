@@ -8,8 +8,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.mapper.BookingMapping;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.comment.dto.CommentDto;
@@ -22,8 +20,6 @@ import ru.practicum.shareit.item.dto.ItemDtoForGet;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.exception.ItemRequestNotFoundException;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 import java.nio.charset.StandardCharsets;
@@ -54,11 +50,7 @@ public class ItemControllerTest {
     private ItemDto itemDto1;
     private ItemDtoForGet itemDtoForGet1;
     private User user1;
-    private UserDto userDto1;
     private User booker1;
-    private UserDto bookerDto1;
-    private Booking booking1;
-    private BookingDto bookingDto1;
     private Comment comment1;
     private CommentDto commentDto1;
 
@@ -70,14 +62,12 @@ public class ItemControllerTest {
         LocalDateTime testCommentCreated = LocalDateTime.of(2023, 11, 5, 5, 15);
 
         user1 = User.builder().id(1).name("John").email("john.doe@mail.com").build();
-        userDto1 = UserMapper.toUserDto(user1);
         booker1 = User.builder().id(2).name("John2").email("john2.doe@mail.com").build();
-        bookerDto1 = UserMapper.toUserDto(booker1);
         item1 = Item.builder().id(1).name("item1").description("description1").available(true).owner(user1).build();
         itemDto1 = ItemMapper.toItemDto(item1);
         itemDtoForGet1 = ItemMapper.toItemDtoForGet(item1);
 
-        booking1 = Booking.builder()
+        Booking booking1 = Booking.builder()
                 .id(1)
                 .start(testStart)
                 .end(testEnd)
@@ -85,7 +75,6 @@ public class ItemControllerTest {
                 .item(item1)
                 .status(Status.WAITING)
                 .build();
-        bookingDto1 = BookingMapping.toBookingDto(booking1);
 
         comment1 = Comment.builder()
                 .id(1)
