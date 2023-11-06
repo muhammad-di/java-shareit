@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -143,7 +142,6 @@ public class UserControllerTest {
         Mockito.verify(userService, Mockito.times(1))
                 .deleteById(1L);
     }
-
 
 
     @Test

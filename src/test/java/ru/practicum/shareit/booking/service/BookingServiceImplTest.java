@@ -76,9 +76,6 @@ public class BookingServiceImplTest {
 
     @BeforeEach
     public void createUsers() {
-//        LocalDateTime testRequestCreated = LocalDateTime.of(2023, 8, 2, 3, 15);
-//        LocalDateTime testStart = LocalDateTime.of(2023, 11, 2, 3, 15);
-//        LocalDateTime testEnd = LocalDateTime.of(2023, 11, 2, 5, 15);
 
         LocalDateTime testRequestCreated = LocalDateTime.now();
         LocalDateTime testStart = LocalDateTime.now().plusHours(1);
@@ -111,11 +108,6 @@ public class BookingServiceImplTest {
     void testSave() throws UserNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, ItemNotFoundException, InvalidEndTimeException {
         User cBooker1 = userRepository.saveAndFlush(booker1);
         User cOwner1 = userRepository.saveAndFlush(owner1);
-
-//        User cRequestor1 = userRepository.saveAndFlush(requestor1);
-//        itemRequest1.setRequestor(cRequestor1);
-//        ItemRequest cItemRequest1 = itemRequestRepository.saveAndFlush(itemRequest1);
-//        item1.setRequest(cItemRequest1);
 
         item1.setOwner(cOwner1);
         Item cItem1 = itemRepository.saveAndFlush(item1);

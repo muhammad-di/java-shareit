@@ -206,7 +206,7 @@ public class ItemRepositoryTest {
         List<Item> itemList = queryForItemList
                 .setParameter("available", true)
                 .setParameter("description", "description")
-                 .getResultList();
+                .getResultList();
 
         log.info("4-itemList-----------{}", itemList);
 
