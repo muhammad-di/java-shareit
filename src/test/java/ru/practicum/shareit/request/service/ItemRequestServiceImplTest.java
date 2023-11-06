@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 
 
@@ -142,6 +144,22 @@ public class ItemRequestServiceImplTest {
         assertThat(actual, samePropertyValuesAs(expected));
     }
 
+    @Test
+    void testSave1() throws UserNotFoundException, ItemRequestNotFoundException, InterruptedException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, ItemNotFoundException, InvalidEndTimeException {
+
+        User requestor = createForComment();
+
+        ItemRequest request = ItemRequestMapper.toItemRequest(itemRequestDtoForRequestBody1);
+        request.setRequestor(requestor);
+
+        UserNotFoundException exception = Assertions.assertThrows(
+                UserNotFoundException.class,
+                () -> itemRequestService.save(request, 500)
+        );
+
+        assertThat(exception.getErrorMessage(), equalTo("MASSAGE: a user with id { 500 } does not exist; ERROR CODE: null"));
+    }
+
 
     @Test
     void testFindById() throws UserNotFoundException, ItemRequestNotFoundException, ItemNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, InterruptedException, InvalidEndTimeException {
@@ -160,6 +178,43 @@ public class ItemRequestServiceImplTest {
         expected.setItems(Collections.emptyList());
 
         assertThat(actual, samePropertyValuesAs(expected));
+    }
+
+    @Test
+    void testFindById1() throws UserNotFoundException, ItemRequestNotFoundException, ItemNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, InterruptedException, InvalidEndTimeException {
+
+        User requestor = createForComment();
+
+        ItemRequest request = ItemRequestMapper.toItemRequest(itemRequestDtoForRequestBody1);
+        request.setRequestor(requestor);
+        ItemRequest cItemRequest = itemRequestService.save(request, requestor.getId());
+
+        itemRequestService.findById(cItemRequest.getId(), requestor.getId());
+
+        UserNotFoundException exception = Assertions.assertThrows(
+                UserNotFoundException.class,
+                () -> itemRequestService.findById(cItemRequest.getId(), 500)
+        );
+
+        assertThat(exception.getErrorMessage(), equalTo("MASSAGE: a user with id { 500 } does not exist; ERROR CODE: null"));
+    }
+
+    @Test
+    void testFindById3() throws UserNotFoundException, ItemRequestNotFoundException, ItemNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, InterruptedException, InvalidEndTimeException {
+
+        User requestor = createForComment();
+
+        ItemRequest request = ItemRequestMapper.toItemRequest(itemRequestDtoForRequestBody1);
+        request.setRequestor(requestor);
+        ItemRequest cItemRequest = itemRequestService.save(request, requestor.getId());
+
+        ItemRequestNotFoundException exception = Assertions.assertThrows(
+                ItemRequestNotFoundException.class,
+                () -> itemRequestService.findById(500, requestor.getId())
+
+        );
+
+        assertThat(exception.getErrorMessage(), equalTo("MASSAGE: an item request with id { 500 } does not exist; ERROR CODE: null"));
     }
 
     @Test
