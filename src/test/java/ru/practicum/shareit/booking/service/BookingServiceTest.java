@@ -11,7 +11,6 @@ import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.booking.BookingServiceImpl;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.exception.BookingAlreadyApprovedException;
-import ru.practicum.shareit.booking.exception.InvalidBookerException;
 import ru.practicum.shareit.booking.mapper.BookingMapping;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
@@ -33,7 +32,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 @ExtendWith(MockitoExtension.class)
@@ -98,23 +96,6 @@ public class BookingServiceTest {
         bookingDto1 = BookingMapping.toBookingDto(booking1);
 
     }
-
-//    @Test
-//    public void testApproveShouldThrowInvalidBookerException() {
-//        BookingService service = new BookingServiceImpl(bookingRepository, userRepository, itemRepository, bookingStateFetchStrategyForBookerMap, bookingStateFetchStrategyForOwnerMap);
-//        booking1.setStatus(Status.APPROVED);
-//        booker1.setId(55);
-//        Mockito.when(userRepository.findById(3L))
-//                .thenReturn(Optional.ofNullable(booker1));
-//        Mockito.when(itemRepository.findById(anyLong()))
-//                .thenReturn(Optional.ofNullable(item1));
-//
-//        InvalidBookerException exception = Assertions.assertThrows(
-//                InvalidBookerException.class,
-//                () -> service.save(booking1, 3)
-//        );
-//        Assertions.assertEquals(exception.getErrorMessage(), "MASSAGE: owner of an item and booker of the item can not be same user; ERROR CODE: null");
-//    }
 
     @Test
     public void testApproveShouldThrowBookingAlreadyApprovedException() {
