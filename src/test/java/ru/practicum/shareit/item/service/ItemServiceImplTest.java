@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingService;
-import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.exception.*;
-import ru.practicum.shareit.booking.mapper.BookingMapping;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.storage.BookingRepository;
@@ -27,12 +25,9 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.request.exception.ItemRequestNotFoundException;
-import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.storage.ItemRequestRepository;
 import ru.practicum.shareit.user.UserService;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
-import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
@@ -81,17 +76,7 @@ public class ItemServiceImplTest {
 
     private User owner1;
     private User booker1;
-    private User requestor1;
-    private UserDto ownerDto1;
-    private UserDto bookerDto1;
-    private UserDto requestorDto1;
     private Item item1;
-    private ItemDto itemDto1;
-    private ItemDtoForGet itemDtoForGet1;
-    private ItemRequest itemRequest1;
-    private Booking booking1;
-    private BookingDto bookingDto1;
-    private CommentDto commentDto1;
     private Comment comment1;
 
 
@@ -103,26 +88,18 @@ public class ItemServiceImplTest {
 
         owner1 = User.builder().name("John").email("john.doe@mail.com").build();
         booker1 = User.builder().name("name2").email("name2@mail.ru").build();
-        requestor1 = User.builder().name("name3").email("name3@mail.ru").build();
-        itemRequest1 = ItemRequest.builder().description("description1").requestor(requestor1).created(testRequestCreated).build();
-        ownerDto1 = UserMapper.toUserDto(owner1);
-        bookerDto1 = UserMapper.toUserDto(booker1);
-        requestorDto1 = UserMapper.toUserDto(requestor1);
 
         item1 = Item.builder().name("item1").description("description1").request(null).available(true).owner(owner1).build();
-        itemDto1 = ItemMapper.toItemDto(item1);
-        itemDtoForGet1 = ItemMapper.toItemDtoForGet(item1);
 
-        booking1 = Booking.builder()
+        Booking booking1 = Booking.builder()
                 .start(testStart)
                 .end(testEnd)
                 .booker(booker1)
                 .item(item1)
                 .status(Status.APPROVED)
                 .build();
-        bookingDto1 = BookingMapping.toBookingDto(booking1);
 
-        commentDto1 = CommentDto.builder().text("commentText1").build();
+        CommentDto commentDto1 = CommentDto.builder().text("commentText1").build();
         comment1 = CommentMapper.toComment(commentDto1);
 
     }

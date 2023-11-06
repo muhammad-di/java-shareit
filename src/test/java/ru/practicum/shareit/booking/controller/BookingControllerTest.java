@@ -48,14 +48,10 @@ public class BookingControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    private Item item1;
-    private ItemDto itemDto1;
     private User user1;
-    private UserDto userDto1;
     private User booker1;
-    private UserDto bookerDto1;
     private Booking booking1;
-    public BookingDto bookingDto1;
+    private BookingDto bookingDto1;
 
 
     @BeforeEach
@@ -64,11 +60,11 @@ public class BookingControllerTest {
         LocalDateTime testEnd = LocalDateTime.of(2023, 11, 2, 5, 15);
 
         user1 = User.builder().id(1).name("John").email("john.doe@mail.com").build();
-        userDto1 = UserMapper.toUserDto(user1);
+        UserDto userDto1 = UserMapper.toUserDto(user1);
         booker1 = User.builder().id(2).name("John2").email("john2.doe@mail.com").build();
-        bookerDto1 = UserMapper.toUserDto(booker1);
-        item1 = Item.builder().id(1).name("item1").description("description1").available(true).owner(user1).build();
-        itemDto1 = ItemMapper.toItemDto(item1);
+        UserDto bookerDto1 = UserMapper.toUserDto(booker1);
+        Item item1 = Item.builder().id(1).name("item1").description("description1").available(true).owner(user1).build();
+        ItemDto itemDto1 = ItemMapper.toItemDto(item1);
         booking1 = Booking.builder()
                 .id(1)
                 .start(testStart)
@@ -99,7 +95,7 @@ public class BookingControllerTest {
     }
 
     @Test
-     void createShouldThrowBookingNotFoundException() throws Exception {
+    void createShouldThrowBookingNotFoundException() throws Exception {
         when(bookingService.save(any(Booking.class), anyLong()))
                 .thenThrow(BookingNotFoundException.class);
 

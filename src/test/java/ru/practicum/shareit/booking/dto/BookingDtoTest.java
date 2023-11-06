@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class BookingDto {
+public class BookingDtoTest {
 
 
     private User userCopy1;

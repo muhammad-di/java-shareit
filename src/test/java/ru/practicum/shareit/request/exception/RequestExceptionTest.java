@@ -24,13 +24,7 @@ public class RequestExceptionTest {
 
 
     private Item item1;
-    private ItemDto itemDto1;
-    private User user1;
-    private UserDto userDto1;
-    private User booker1;
-    private UserDto bookerDto1;
     private Booking booking1;
-    private BookingDto bookingDto1;
     private LocalDateTime testStart;
     private LocalDateTime testEnd;
 
@@ -40,12 +34,9 @@ public class RequestExceptionTest {
         testStart = LocalDateTime.of(2023, 11, 2, 3, 15);
         testEnd = LocalDateTime.of(2023, 11, 2, 5, 15);
 
-        user1 = User.builder().id(1).name("John").email("john.doe@mail.com").build();
-        userDto1 = UserMapper.toUserDto(user1);
-        booker1 = User.builder().id(2).name("John2").email("john2.doe@mail.com").build();
-        bookerDto1 = UserMapper.toUserDto(booker1);
+        User user1 = User.builder().id(1).name("John").email("john.doe@mail.com").build();
+        User booker1 = User.builder().id(2).name("John2").email("john2.doe@mail.com").build();
         item1 = Item.builder().id(1).name("item1").description("description1").available(true).owner(user1).build();
-        itemDto1 = ItemMapper.toItemDto(item1);
         booking1 = Booking.builder()
                 .id(1)
                 .start(testStart)
@@ -54,7 +45,6 @@ public class RequestExceptionTest {
                 .item(item1)
                 .status(Status.WAITING)
                 .build();
-        bookingDto1 = BookingMapping.toBookingDto(booking1);
     }
 
     @Test
