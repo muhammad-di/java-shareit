@@ -276,7 +276,8 @@ public class ItemServiceImplTest {
 
     @Test
     void testGetItem() throws UserNotFoundException, ItemRequestNotFoundException, IncorrectBookerException, ItemNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, InvalidEndTimeException {
-        User cBooker = userRepository.saveAndFlush(booker1);;
+        User cBooker = userRepository.saveAndFlush(booker1);
+
         item1.setOwner(cBooker);
         Item cItem = itemRepository.save(item1);
         Item rItem = serviceImpl.findItemById(cItem.getId());
@@ -287,7 +288,8 @@ public class ItemServiceImplTest {
 
     @Test
     void testGetItem1() {
-        User cBooker = userRepository.saveAndFlush(booker1);;
+        User cBooker = userRepository.saveAndFlush(booker1);
+
         item1.setOwner(cBooker);
         Item cItem = itemRepository.save(item1);
 
@@ -296,6 +298,30 @@ public class ItemServiceImplTest {
                 () -> serviceImpl.findItemById(400L)
         );
         assertThat(exception.getErrorMessage(), equalTo("MASSAGE: an item with id { 400 } does not exist; ERROR CODE: null"));
+
+    }
+
+
+    @Test
+    void testValidateOwner() throws UserNotFoundException, ItemRequestNotFoundException, IncorrectBookerException, ItemNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, InvalidEndTimeException, IncorrectOwnerException {
+        User cBooker = userRepository.saveAndFlush(booker1);
+        User rBooker = serviceImpl.getUser(cBooker.getId());
+        serviceImpl.validateOwner(cBooker, rBooker.getId());
+
+        assertThat(cBooker, equalTo(rBooker));
+
+    }
+
+    @Test
+    void validateOwner1() throws UserNotFoundException {
+        User cBooker = userRepository.saveAndFlush(booker1);
+        User rBooker = serviceImpl.getUser(cBooker.getId());
+
+        final IncorrectOwnerException exception = Assertions.assertThrows(
+                IncorrectOwnerException.class,
+                () -> serviceImpl.validateOwner(cBooker, 400L)
+        );
+        assertThat(exception.getErrorMessage(), equalTo("MASSAGE: a wrong owner exception; ERROR CODE: null"));
 
     }
 
