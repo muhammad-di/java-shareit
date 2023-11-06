@@ -59,7 +59,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     public Booking approve(long bookingId, long ownerId, boolean approved)
-            throws BookingNotFoundException, BookingAlreadyApprovedException, InvalidOwnerException {
+            throws BookingAlreadyApprovedException, InvalidOwnerException, BookingNotFoundException {
         Booking booking = findBookingById(bookingId);
 
         BookingValidation.validateForApprove(booking, ownerId);

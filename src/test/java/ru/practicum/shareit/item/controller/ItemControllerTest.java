@@ -21,6 +21,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForGet;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.exception.ItemRequestNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -113,6 +114,21 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.description", is(itemDto1.getDescription())))
                 .andExpect(jsonPath("$.available", is(itemDto1.getAvailable())))
                 .andExpect(jsonPath("$.requestId", is(itemDto1.getRequestId()), Long.class));
+
+    }
+
+    @Test
+    void createShouldThrowItemRequestNotFoundException() throws Exception {
+        when(service.save(any(Item.class), anyLong()))
+                .thenThrow(ItemRequestNotFoundException.class);
+
+        mvc.perform(post("/items")
+                        .header("X-Sharer-User-Id", user1.getId())
+                        .content(mapper.writeValueAsString(itemDto1))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
 
     }
 

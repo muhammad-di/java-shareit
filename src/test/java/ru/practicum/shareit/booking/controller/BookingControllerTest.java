@@ -11,6 +11,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.BookingController;
 import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.exception.BookingAlreadyApprovedException;
+import ru.practicum.shareit.booking.exception.BookingNotFoundException;
+import ru.practicum.shareit.booking.exception.InvalidBookerException;
 import ru.practicum.shareit.booking.mapper.BookingMapping;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
@@ -56,7 +59,7 @@ public class BookingControllerTest {
 
 
     @BeforeEach
-    public void createItems() {
+    public void create() {
         LocalDateTime testStart = LocalDateTime.of(2023, 11, 2, 3, 15);
         LocalDateTime testEnd = LocalDateTime.of(2023, 11, 2, 5, 15);
 
@@ -95,6 +98,36 @@ public class BookingControllerTest {
 
     }
 
+    @Test
+    void createShouldThrowBookingNotFoundException() throws Exception {
+        when(bookingService.save(any(Booking.class), anyLong()))
+                .thenThrow(BookingNotFoundException.class);
+
+        mvc.perform(post("/bookings")
+                        .header("X-Sharer-User-Id", booker1.getId())
+                        .content(mapper.writeValueAsString(bookingDto1))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    void createShouldThrowInvalidBookerException() throws Exception {
+        when(bookingService.save(any(Booking.class), anyLong()))
+                .thenThrow(InvalidBookerException.class);
+
+        mvc.perform(post("/bookings")
+                        .header("X-Sharer-User-Id", booker1.getId())
+                        .content(mapper.writeValueAsString(bookingDto1))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+    }
+
 
     @Test
     void approveShouldReturnApprovedUser() throws Exception {
@@ -116,6 +149,23 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.end", is(bookingDto1.getEnd().format(DateTimeFormatter.ISO_DATE_TIME))))
                 .andExpect(jsonPath("$.status", is(booking1.getStatus().toString()), String.class));
 
+    }
+
+    @Test
+    void approveShouldThrowBookingAlreadyApprovedException() throws Exception {
+        booking1.setStatus(Status.APPROVED);
+        bookingDto1.setStatus(Status.APPROVED);
+        when(bookingService.approve(anyLong(), anyLong(), anyBoolean()))
+                .thenThrow(BookingAlreadyApprovedException.class);
+
+        mvc.perform(patch("/bookings/1")
+                        .param("approved", "true")
+                        .header("X-Sharer-User-Id", booker1.getId())
+                        .content(mapper.writeValueAsString(bookingDto1))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

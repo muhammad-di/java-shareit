@@ -10,16 +10,6 @@ public class UserNotAllowedAccessBookingException extends Exception {
         super(message);
     }
 
-    public UserNotAllowedAccessBookingException(String message, HttpStatus errorCode) {
-        super(message);
-        this.errorCode = errorCode;
-    }
-
-    public UserNotAllowedAccessBookingException(String message, Throwable cause, HttpStatus errorCode) {
-        super(message, cause);
-        this.errorCode = errorCode;
-    }
-
     public HttpStatus getErrorCode() {
         return errorCode;
     }

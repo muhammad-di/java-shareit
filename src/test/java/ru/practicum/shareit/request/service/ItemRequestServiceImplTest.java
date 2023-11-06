@@ -1,4 +1,4 @@
-package ru.practicum.shareit.itemRequest.service;
+package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
