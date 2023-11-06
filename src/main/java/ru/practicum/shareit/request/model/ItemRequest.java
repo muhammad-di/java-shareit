@@ -27,7 +27,7 @@ public class ItemRequest {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "requestor_id")
     private User requestor;
 

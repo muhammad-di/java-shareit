@@ -11,9 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Objects;
 
-/**
- * TODO Sprint add-controllers.
- */
+
 @Data
 @Builder
 public class ItemDtoForGet {

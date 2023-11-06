@@ -80,8 +80,7 @@ public class BookingServiceImpl implements BookingService {
     public Collection<Booking> findAllByBookerId(long bookerId, String stateString, int from, int size)
             throws UserNotFoundException, UnsupportedStateException {
         String state = BookingValidation.validateStateForBooker(stateString);
-        Pageable sortedByStartDesc = PageRequest.of(from, size, Sort.by("start").descending());
-
+        Pageable sortedByStartDesc = getPages(from, size);
         existsUserById(bookerId);
         BookingStateFetchStrategyForBooker strategy = bookingStateFetchStrategyForBookerMap.get(state);
         if (strategy != null) {
@@ -99,7 +98,7 @@ public class BookingServiceImpl implements BookingService {
     public Collection<Booking> findAllByOwnerId(long ownerId, String stateString, int from, int size)
             throws UserNotFoundException, UnsupportedStateException {
         String state = BookingValidation.validateStateForOwner(stateString);
-        Pageable sortedByStartDesc = PageRequest.of(from, size, Sort.by("start").descending());
+        Pageable sortedByStartDesc = getPages(from, size);
 
         existsUserById(ownerId);
         BookingStateFetchStrategyForOwner strategy = bookingStateFetchStrategyForOwnerMap.get(state);
@@ -162,5 +161,10 @@ public class BookingServiceImpl implements BookingService {
         }
         return null;
     }
+
+    private Pageable getPages(int from, int size) {
+        return PageRequest.of(from, size, Sort.by("start").descending());
+    }
+
 
 }

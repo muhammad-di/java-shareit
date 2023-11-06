@@ -170,15 +170,14 @@ public class ItemServiceImpl implements ItemService {
                 .findAllByItemIdAndStatusAndStartBeforeOrderByEndDesc(itemDto.getId(), Status.APPROVED, currentDateTime);
         List<Booking> nextBookingList = bookingRepository
                 .findAllByItemIdAndStatusAndStartAfterOrderByStartAsc(itemDto.getId(), Status.APPROVED, currentDateTime);
+        lastBookingList.stream()
+                .findFirst()
+                .ifPresent(booking -> itemDto.setLastBooking(BookingMapping.toBookingDtoForItemDto(booking)));
 
-        if (!lastBookingList.isEmpty()) {
-            Booking booking = lastBookingList.stream().findFirst().get();
-            itemDto.setLastBooking(BookingMapping.toBookingDtoForItemDto(booking));
-        }
-        if (!nextBookingList.isEmpty()) {
-            Booking booking = nextBookingList.stream().findFirst().get();
-            itemDto.setNextBooking(BookingMapping.toBookingDtoForItemDto(booking));
-        }
+        nextBookingList.stream()
+                .findFirst()
+                .ifPresent(booking -> itemDto.setNextBooking(BookingMapping.toBookingDtoForItemDto(booking)));
+
         return itemDto;
     }
 
