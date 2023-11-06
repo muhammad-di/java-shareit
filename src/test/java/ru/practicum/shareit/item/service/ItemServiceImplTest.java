@@ -26,6 +26,7 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.request.exception.ItemRequestNotFoundException;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.storage.ItemRequestRepository;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
@@ -236,6 +237,40 @@ public class ItemServiceImplTest {
         );
         assertThat(exception.getErrorMessage(), equalTo("MASSAGE: a user with id { 500 } does not exist; ERROR CODE: null"));
 
+    }
+
+
+    @Test
+    void testGetUser() throws UserNotFoundException, ItemRequestNotFoundException, IncorrectBookerException, ItemNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, InvalidEndTimeException {
+        User cBooker = userRepository.saveAndFlush(booker1);
+        User rBooker = serviceImpl.getUser(cBooker.getId());
+
+        assertThat(rBooker, equalTo(cBooker));
+
+    }
+
+    @Test
+    void testGetUser2() {
+        User cBooker = userRepository.saveAndFlush(booker1);
+
+        final UserNotFoundException exception = Assertions.assertThrows(
+                UserNotFoundException.class,
+                () -> serviceImpl.getUser(400L)
+        );
+        assertThat(exception.getErrorMessage(), equalTo("MASSAGE: a user with id { 400 } does not exist; ERROR CODE: null"));
+
+    }
+
+
+    @Test
+    void testSetItemRequest() throws UserNotFoundException, ItemRequestNotFoundException, IncorrectBookerException, ItemNotFoundException, InvalidBookerException, InvalidStartTimeException, BookingNotFoundException, ItemNotAvailableException, InvalidEndTimeException {
+        User cBooker = userRepository.saveAndFlush(booker1);
+        ItemRequest request = ItemRequest.builder().description("description").requestor(cBooker).created(LocalDateTime.now()).build();
+        ItemRequest cRequest = itemRequestRepository.saveAndFlush(request);
+
+        serviceImpl.setItemRequest(item1);
+
+        assertThat(cBooker, equalTo(booker1));
     }
 
 }
