@@ -1,10 +1,36 @@
-# версия Docker Compose
 version: '3.1'
-
-# имена и описания контейнеров, которые должны быть развёрнуты
 services:
-
-  web:
-    build: .
+  gateway:
+    build: ./gateway
+    container_name: gateway
     ports:
       - "8080:8080"
+    depends_on:
+      - db
+      - server
+    environment:
+      - SHAREIT_SERVER_URL=http://server:9090
+
+  server:
+    build: ./server
+    container_name: server
+    ports:
+      - "9090:9090"
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_URL=jdbc:postgresql://db:5432/shareit
+
+  db:
+    image: postgres:14.3-alpine
+    container_name: db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: shareit
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      PGDATA: var/lib/postgresql/data/pgdata
+    volumes:
+      - ./postgres_db:/var/lib/postgresql/data
